@@ -1,0 +1,301 @@
+/* 样式调整：设置 Markdown 中的图片样式 */
+:deep(.markdown-content img) {
+    max-width: 85%;
+    display: block;
+    margin: 20px auto;
+    border-radius: 5px;
+    border: 3px solid rgba(15, 230, 200, 0.5);
+}
+
+/* 设置 markdown-content 中的 h1 ~ h4 标题样式 */
+:deep(.markdown-content h1) {
+    font-size: 1.75rem;
+    color: rgba(230, 255, 255, 0.99);
+    margin: 30px 0 30px 0;
+    font-weight: 800;
+    text-align: left;
+    position: relative;
+    left: 2rem;
+}
+
+:deep(.markdown-content h2) {
+    font-size: 1.6rem;
+    color: rgba(230, 255, 255, 0.99);
+    margin: 30px 0 30px 0;
+    font-weight: 700;
+    position: relative;
+    left: 2rem;
+}
+
+:deep(.markdown-content h3) {
+    font-size: 1.3em;
+    color: rgba(230, 255, 255, 0.99);
+    margin: 30px 0 30px 0;
+    font-weight: 600;
+    text-align: left;
+    position: relative;
+    left: 2rem;
+}
+
+:deep(.markdown-content h4) {
+    font-size: 1.2em; // 设置 h4 字体大小
+    color: rgba(230, 255, 255, 0.99);
+    margin: 30px 0 30px 0;
+    font-weight: 400;
+    text-align: left;
+}
+
+/* 设置 markdown-content 中的段落样式 */
+:deep(.markdown-content p) {
+    font-size: 1rem;
+    color: rgba(250, 250, 250, 0.9);
+    line-height: 1.4;
+    margin: 15px 0 15px 0;
+    padding: 0 10px;
+    text-align: left;
+}
+
+/* 设置无序列表（ul）样式 */
+:deep(.markdown-content ul) {
+    list-style-type: square;
+    padding-left: 4rem;
+    margin: 10px 0;
+}
+
+/* 设置无序列表项（li）样式 */
+:deep(.markdown-content ul li) {
+    font-size: 1rem;
+    color: rgba(250, 250, 250, 0.9);
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+/* 设置有序列表（ol）样式 */
+:deep(.markdown-content ol) {
+    list-style-type: decimal;
+    padding-left: 4rem;
+    margin: 10px 0;
+}
+
+/* 设置有序列表项（li）样式 */
+:deep(.markdown-content ol li) {
+    font-size: 1rem;
+    color: rgba(250, 250, 250, 0.9);
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+/* 自定义斜体样式 */
+:deep(.markdown-content em) {
+    font-style: italic;
+    color: rgba(255, 220, 220, 0.9);
+    font-weight: 200;
+}
+
+/* 下划线样式 */
+:deep(.markdown-content u) {
+    text-decoration: underline;
+    color: rgba(255, 220, 220, 0.9);
+    font-weight: 700;
+}
+
+/* 删除线样式 */
+:deep(.markdown-content del) {
+    text-decoration: line-through;
+    color: rgba(255, 220, 220, 0.9);
+}
+
+/* 引用样式 */
+:deep(.markdown-content blockquote) {
+    padding: 25px 25px;
+    border-left: 5px solid rgba(15, 230, 200, 0.85);
+    background-color: rgba(15, 230, 200, 0.05);
+    margin: 30px 0;
+    font-weight: 800;
+}
+
+/* 引用样式 */
+:deep(.markdown-content blockquote p) {
+    color: rgba(250, 250, 250, 0.95);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+:deep(.toc) {
+    position: fixed;
+    bottom: 10rem;
+    right: 0.5rem;
+    background-color: rgba(0, 75, 57, 0.75); /* 设置目录背景色 */
+    padding: 10px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    border-radius: 5px; /* 给目录容器加圆角 */
+}
+
+:deep(.toc ul) {
+    list-style: none; /* 移除默认的小圆点 */
+    padding: 0; /* 移除默认的内边距 */
+    margin: 0; /* 移除默认的外边距 */
+}
+
+:deep(.toc a) {
+    color: white;
+    text-decoration: none; /* 移除默认的下划线 */
+    font-size: 0.85em; /* 设置字体大小 */
+    font-weight: 700; /* 设置字体加粗 */
+    transition: color 0.3s ease; /* 添加过渡效果 */
+}
+
+:deep(.toc a:hover) {
+    color: rgba(255, 152, 0); /* 鼠标悬停时改变颜色 */
+    text-decoration: underline; /* 添加下划线 */
+}
+
+:deep(.toc-title) {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 5px auto 10px 10px;
+    font-size: 0.9em; /* 设置字体大小 */
+    font-weight: 700; /* 设置字体加粗 */
+    color: #9cece0;
+}
+
+:deep(.toc) {
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    li ul {
+        padding-left: 1.2rem;
+    }
+
+    a {
+        color: #00bfa5;
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+
+/* 设置代码块的背景颜色、内边距、圆角和阴影效果 */
+:deep(.markdown-content pre) {
+    margin: 0 auto;
+    line-height: 1.25rem;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: rgb(10, 35, 35);
+    padding: 5px 10px 5px 10px;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+/* 设置代码块内部代码的样式 */
+:deep(.markdown-content code) {
+    font-family: 'Fira Code', Courier, monospace;
+    font-size: 0.9rem;
+    background-color: rgb(10, 35, 35);
+    padding: 1px 3px;
+    border-radius: 1px;
+    color: rgba(229, 189, 114, 0.9);
+}
+
+/* 设置行内代码 */
+:deep(.markdown-content code:not(pre code)) {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #f0c674;
+    font-size: 0.8em;
+    font-family: 'Fira Code', monospace;
+}
+
+/* 自定义关键字样式 */
+:deep(.markdown-content .hljs-keyword) {
+    color: rgba(220, 50, 100, 0.9);
+    font-weight: 550;
+}
+
+/* 自定义字符串样式 */
+:deep(.markdown-content .hljs-string) {
+    color: rgba(75, 220, 145, 0.9);
+}
+
+/* 自定义函数名参数样式 */
+:deep(.markdown-content .hljs-params) {
+    color: #d0b223;
+}
+
+:deep(.code-wrapper) {
+    //border: 1px solid #444;
+    width: 90%;
+    border-radius: 5px;
+    margin: 1.5rem auto;
+    background-color: #1e1e1e;
+    overflow: hidden;
+}
+
+:deep(.code-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(10, 35, 35);
+    padding: 0.5rem 1rem;
+}
+
+:deep(.code-lang) {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.75);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+:deep(.mac-dots) {
+    display: flex;
+    gap: 0.5rem;
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .red {
+        background-color: #ff5f56;
+    }
+
+    .yellow {
+        background-color: #ffbd2e;
+    }
+
+    .green {
+        background-color: #27c93f;
+    }
+}
+
+:deep(.copy-btn) {
+    all: unset;
+    background: transparent;
+    color: #eee;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #444;
+        border-color: #fff;
+    }
+}
