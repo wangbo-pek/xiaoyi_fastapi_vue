@@ -1,6 +1,11 @@
+"""
+    path: xiaoyi/BackEnd/app/api/v1/diary.py
+    description: 日记相关路由、视图函数
+"""
+
 from fastapi import APIRouter
 
-router = APIRouter()
+router = APIRouter(prefix="/diary", tags=["日记管理"])
 
 @router.get("/diaries/")
 async def diary_list():

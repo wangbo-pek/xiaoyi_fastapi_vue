@@ -1,6 +1,6 @@
 """
     path: xiaoyi/BackEnd/app/api/v1/note.py
-    description: 文章笔记note的路由设置以及视图函数
+    description: 文章相关路由、视图函数
 """
 
 from fastapi import APIRouter
