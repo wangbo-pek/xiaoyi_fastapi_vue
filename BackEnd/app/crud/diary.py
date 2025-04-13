@@ -42,9 +42,9 @@ def create_diary_and_list(
     db.flush()
 
     diary = Diary(
-        title=diary_list_data.title,
-        content=diary_list_data.content,
-        image_url=diary_list_data.image_url,
+        title=diary_data.title,
+        content=diary_data.content,
+        image_url=diary_data.image_url,
         diary_list=diary_list
     )
 

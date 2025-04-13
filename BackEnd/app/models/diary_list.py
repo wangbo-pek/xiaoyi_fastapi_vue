@@ -12,6 +12,7 @@ from app.models.association import diary_tag
 
 if TYPE_CHECKING:
     from app.models.tag import Tag
+    from app.models.diary import Diary
 
 class DiaryList(Base):
     __tablename__ = 'diary_list'
@@ -40,3 +41,6 @@ class DiaryList(Base):
         secondary=diary_tag,
         back_populates='diaries_list'
     )
+
+    # DiaryList 1:1 Diary
+    diary: Mapped["Diary"] = relationship(back_populates="diary_list", uselist=False)

@@ -7,6 +7,9 @@ from pathlib import Path
 from app.utils.oss_upload import upload_to_oss
 from app.crud.diary import create_diary_and_list
 from app.crud.note import create_note_and_list
+from app.schema.note import NoteCreate, NoteListCreate
+from app.schema.diary import DiaryCreate, DiaryListCreate
+from app.core.database import SessionLocal
 
 
 # 用于提取markdown中的纯文本摘要
@@ -28,7 +31,6 @@ def extract_text(md_text: str, max_length: int = 100) -> str:
 
 
 def process_uploads():
-    print('1')
     upload_path = Path("/Users/wangbo/Documents/uploads")
     if not upload_path.exists():
         print(f"❌错误❌ 上传目录不存在：{upload_path}")
@@ -110,32 +112,53 @@ def process_uploads():
         # 去除结构行后的 markdown 内容
         content = '\n'.join(lines)
 
+        db = SessionLocal()
         # 创建数据
-        if is_note:
-            create_note_and_list(
-                title=title,
-                brief=brief,
-                content=content,
-                cover_url=cover_url,
-                image_urls=image_urls,
-                category=category,
-                tags=tags
-            )
-        elif is_diary:
-            create_diary_and_list(
-                title=title,
-                brief=brief,
-                content=content,
-                cover_url=cover_url,
-                image_urls=image_urls,
-                tags=tags
-            )
-
-        # 重命名文件夹
-        new_folder = folder.with_name(folder_name + '_uploaded')
-        folder.rename(new_folder)
-        print(f'✅处理完毕并已重新命名：{new_folder.name}')
-
+        try:
+            if is_note:
+                create_note_and_list(
+                    db=db,
+                    note_data=NoteCreate(
+                        title=title,
+                        content=content,
+                        image_url=image_urls
+                    ),
+                    note_list_data=NoteListCreate(
+                        title=title,
+                        brief=brief,
+                        cover_img=cover_url,
+                        category=category,
+                        tags=tags
+                    )
+                )
+                print(f'✅ 成功保存笔记：{title}')
+                # 重命名文件夹
+                new_folder = folder.with_name(folder_name + '_uploaded')
+                folder.rename(new_folder)
+                print(f'✅处理完毕并已重新命名：{new_folder.name}')
+            elif is_diary:
+                create_diary_and_list(
+                    db=db,
+                    diary_data=DiaryCreate(
+                        title=title,
+                        content=content,
+                        image_url=image_urls
+                    ),
+                    diary_list_data=DiaryListCreate(
+                        title=title,
+                        brief=brief,
+                        cover_img=cover_url,
+                        tags=tags
+                    )
+                )
+                print(f'✅ 成功保存笔记：{title}')
+                # 重命名文件夹
+                new_folder = folder.with_name(folder_name + '_uploaded')
+                folder.rename(new_folder)
+                print(f'✅处理完毕并已重新命名：{new_folder.name}')
+        except Exception as e:
+            print(f'❌ 处理失败：{folder_name}，错误：{e}')
 
 if __name__ == '__main__':
     process_uploads()
+

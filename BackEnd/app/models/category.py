@@ -10,7 +10,7 @@ from sqlalchemy import String, DateTime, Boolean
 from app.core.database import Base
 
 if TYPE_CHECKING:
-    from app.models.note import Note
+    from app.models.note_list import NoteList
 
 class Category(Base):
     __tablename__ = 'category'
@@ -24,5 +24,5 @@ class Category(Base):
     is_show: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, comment='分类是否可见')
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, comment='是否被软删除')
 
-    # Category n:1 Note
-    notes: Mapped[List["Note"]] = relationship(back_populates='category')
+    # Category n:1 NoteList
+    notes_list: Mapped[List["NoteList"]] = relationship(back_populates='category')

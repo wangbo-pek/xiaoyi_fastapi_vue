@@ -53,7 +53,7 @@ class NoteList(Base):
     # Note n:1 Category
     category_id: Mapped[int] = mapped_column(ForeignKey('category.id'), nullable=False, unique=True,
                                              comment='对应分类id')
-    category: Mapped["Category"] = relationship(back_populates='notes')
+    category: Mapped["Category"] = relationship(back_populates='notes_list')
 
     # NoteList n:n Tag
     tags: Mapped[List["Tag"]] = relationship(

@@ -9,16 +9,16 @@ from app.core.database import Base
 
 # note_list和tag的中间表
 note_tag = Table(
-    'note_tag',
+    'notelist_tag',
     Base.metadata,
-    Column('note_id', ForeignKey('note.id'), primary_key=True),
+    Column('note_list_id', ForeignKey('note_list.id'), primary_key=True),
     Column('tag_id', ForeignKey('tag.id'), primary_key=True),
 )
 
 # diary_list和tag的中间表
 diary_tag = Table(
-    'diary_tag',
+    'diarylist_tag',
     Base.metadata,
-    Column('diary_id', ForeignKey('diary.id'), primary_key=True),
+    Column('diary_list_id', ForeignKey('diary_list.id'), primary_key=True),
     Column('tag_id', ForeignKey('tag.id'), primary_key=True),
 )

@@ -1,8 +1,3 @@
-"""
-    path: xiaoyi/BackEnd/utils/oss_upload.py
-    description: 将note、diary的插图、封面图上传到阿里oss
-"""
-
 import oss2
 import os
 from dotenv import load_dotenv
@@ -11,10 +6,10 @@ from pathlib import Path
 
 # 加载.env文件中的oss配置信息
 load_dotenv()
-ACCESS_KEY_ID = os.getenv("ALIYUN_OSS_ACCESS_KEY_ID")
-ACCESS_KEY_SECRET = os.getenv("ALIYUN_OSS_ACCESS_KEY_SECRET")
-BUCKET_NAME = os.getenv("ALIYUN_OSS_BUCKET_NAME")
-ENDPOINT = os.getenv("ALIYUN_OSS_ENDPOINT")
+ACCESS_KEY_ID = os.getenv("OSS_ACCESS_KEY_ID")
+ACCESS_KEY_SECRET = os.getenv("OSS_ACCESS_KEY_SECRET")
+BUCKET_NAME = os.getenv("OSS_BUCKET_NAME")
+ENDPOINT = os.getenv("OSS_ENDPOINT")
 
 # 初始化oss认证和存储桶对象
 auth = oss2.Auth(ACCESS_KEY_ID, ACCESS_KEY_SECRET)
