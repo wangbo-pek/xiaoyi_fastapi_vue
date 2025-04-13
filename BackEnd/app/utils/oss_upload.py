@@ -1,3 +1,8 @@
+"""
+    path: xiaoyi/BackEnd/utils/oss_upload.py
+    description: 将note、diary的插图、封面图上传到阿里oss
+"""
+
 import oss2
 import os
 from dotenv import load_dotenv

@@ -7,4 +7,4 @@ def init_db():
     print('初始化成功')
 
 if __name__ == '__main__':
-    init_db()
+    pass

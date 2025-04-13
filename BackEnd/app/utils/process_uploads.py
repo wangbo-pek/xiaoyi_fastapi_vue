@@ -1,9 +1,12 @@
-import json
+"""
+    path: xiaoyi/BackEnd/utils/process_uploads.py
+    description: 处理本地uploads文件夹内的待处理的markdown文件、插入、封面
+"""
 import re
 from pathlib import Path
-
-from BackEnd.utils.oss_upload import upload_to_oss
-from BackEnd.utils.db_create import create_note_and_list, create_diary_and_list
+from app.utils.oss_upload import upload_to_oss
+from app.crud.diary import create_diary_and_list
+from app.crud.note import create_note_and_list
 
 
 # 用于提取markdown中的纯文本摘要
@@ -25,11 +28,10 @@ def extract_text(md_text: str, max_length: int = 100) -> str:
 
 
 def process_uploads():
-
     print('1')
     upload_path = Path("/Users/wangbo/Documents/uploads")
     if not upload_path.exists():
-        print(f"错误：上传目录不存在：{upload_path}")
+        print(f"❌错误❌ 上传目录不存在：{upload_path}")
         return
 
     for folder in upload_path.iterdir():
@@ -37,7 +39,7 @@ def process_uploads():
         if not folder.is_dir() or folder_name.endswith('_uploaded') or folder_name.endswith('_preparation'):
             continue
 
-        print(f'\n\u2728 开始处理：{folder_name}')
+        print(f'\n✨开始处理✨{folder_name}')
 
         is_note = folder_name.startswith('note')
         is_diary = folder_name.startswith('diary')
@@ -55,7 +57,7 @@ def process_uploads():
         pictures_path = folder / 'pictures'
 
         if not md_file or not cover_path.exists():
-            print(f'缺少必要文件，跳过{folder_name}')
+            print(f'⚠️缺少⚠️ .md 或 cover.jpg，跳过：{folder_name}')
             continue
 
         # 上传封面图
@@ -82,65 +84,57 @@ def process_uploads():
         title = md_file.stem
         lines = md_content.strip().splitlines()
 
+        brief = ''
+        category = ''
+        tags = []
+
+        # 提取摘要（第一个引用段落）
+        for line in lines:
+            if line.strip().startswith('>'):
+                brief = extract_text(line)
+                break
+
+        # 提取分类和标签（最后一行）
+        if lines:
+            last_line = lines[-1]
+            if is_note and last_line.startswith('@'):
+                parts = last_line.split()
+                if parts:
+                    category = parts[0][1:].strip()
+                    tags = [p[1:] for p in parts[1:] if p.startswith('#')]
+                lines = lines[:-1]
+            elif is_diary and last_line.strip().startswith('#'):
+                tags = [t[1:] for t in last_line.strip().split() if t.startswith('#')]
+                lines = lines[:-1]
+
+        # 去除结构行后的 markdown 内容
+        content = '\n'.join(lines)
+
+        # 创建数据
         if is_note:
-            # 提取最后一行分类/标签
-            category = ''
-            tags = []
-            if lines:
-                last_line = lines[-1]
-                if last_line.startswith('@'):
-                    parts = last_line.split()
-                    if parts:
-                        category = parts[0][1:].strip()
-                        for part in parts[1:]:
-                            if part.startswith('#'):
-                                tags.append(part[1:])
-                    # 删除分类标签行
-                    lines = lines[:-1]
-                    md_content = '\n'.join(lines)
-
-            # 提取引用作为 brief
-            brief_quote = ''
-            for line in lines:
-                if line.strip().startswith('>'):
-                    brief_quote = line
-                    break
-            brief = extract_text(brief_quote)
-
             create_note_and_list(
                 title=title,
                 brief=brief,
-                content=md_content,
+                content=content,
                 cover_url=cover_url,
                 image_urls=image_urls,
                 category=category,
                 tags=tags
             )
-
         elif is_diary:
-            # 提取第一行 brief
-            brief = ''
-            if lines:
-                first_line = lines[0]
-                if first_line.startswith('@'):
-                    brief = first_line[1:].strip()
-                    lines = lines[1:]
-                    md_content = '\n'.join(lines)
-                else:
-                    brief = extract_text(md_content)
-
             create_diary_and_list(
                 title=title,
                 brief=brief,
-                content=md_content,
+                content=content,
                 cover_url=cover_url,
-                image_urls=image_urls
+                image_urls=image_urls,
+                tags=tags
             )
 
         # 重命名文件夹
         new_folder = folder.with_name(folder_name + '_uploaded')
         folder.rename(new_folder)
-        print(f'\u2705 处理完毕并已重新命名：{new_folder.name}')
+        print(f'✅处理完毕并已重新命名：{new_folder.name}')
 
 
 if __name__ == '__main__':

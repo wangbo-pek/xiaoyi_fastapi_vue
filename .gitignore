@@ -1,17 +1,31 @@
 # Python
 __pycache__/
 *.py[cod]
-*.env
-*.sqlite3
-*.log
-.venv/
-env/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# PyCharm
 .idea/
 
-# Node / Vue3
-node_modules/
-dist/
+# Virtual Environment
+.venv/
+
+# VSCode
 .vscode/
 
-# macOS
-.DS_Store
+# MySQL dumps or SQLite
+*.sqlite3
+*.db
+*.sql
+
+# Env files
+.env
+
+# Node modules (Vue)
+FrontEnd/node_modules/
+
+# Log files
+*.log
