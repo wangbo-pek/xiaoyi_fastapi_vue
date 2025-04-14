@@ -1,5 +1,5 @@
 """
-    path: xiaoyi/BackEnd/app/api/v1/tag_category.py
+    path: xiaoyi/BackEnd/app/api/tag_category.py
     description: 标签、分类路由、视图函数
 """
 

@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
-from pathlib import Path
+
 
 class Settings(BaseSettings):
     # 数据库配置

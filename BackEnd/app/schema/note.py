@@ -2,9 +2,11 @@
     path: xiaoyi/BackEnd/schema/note.py
     description: 笔记Note的Pydantic模型
 """
-
+from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
+
+from app.schema.tag_category import TagOut, CategoryOut
 
 
 class NoteCreate(BaseModel):
@@ -19,3 +21,30 @@ class NoteListCreate(BaseModel):
     cover_img: str = Field(..., description="封面图 URL")
     category: str = Field(..., description="分类名称")
     tags: List[str] = Field(default_factory=list, description="标签列表")
+
+
+class NoteListOut(BaseModel):
+    id: int = Field(..., description='文章id', alias='noteListId')
+    title: str = Field(..., description='文章标题')
+    brief: str = Field(..., description='文章摘要')
+    cover_img: str = Field(..., description='封面图url', alias='coverImg')
+    slug: str = Field(..., description='url别名')
+    keyword: str = Field(..., description='关键字')
+    description: str = Field(..., description='文章描述')
+    category: CategoryOut = Field(..., description='文章分类')
+    tags: List[TagOut] = Field(default_factory=list, description='文章的标签列表')
+
+    is_pinned: bool = Field(..., description='是否被置顶', alias='isPinned')
+    is_recommended: bool = Field(..., description='是否被推荐', alias='isRecommended')
+    created_time: datetime = Field(..., description="创建时间", alias='createdTime')
+    updated_time: datetime = Field(..., description="更新时间", alias='updatedTime')
+
+    view_count: int = Field(..., description='浏览次数', alias='viewCount')
+    like_count: int = Field(..., description="点赞次数", alias='likeCount')
+    dislike_count: int = Field(..., description="被踩次数", alias='dislikeCount')
+    reading_time: int = Field(..., description="阅读时间（单位：秒）", alias='readingTime')
+    word_count: int = Field(..., description="文章字数", alias='wordCount')
+
+    class Config:
+        from_attributes = True
+        validate_by_name = True

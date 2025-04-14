@@ -1,20 +1,15 @@
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from app.core.config import settings
 
 class Base(DeclarativeBase): pass
 
-# 创建数据库引擎连接
+# 创建异步数据库引擎连接
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=True,
-    future=True,
-    pool_pre_ping=True
+    echo=False,
+    future=True
 )
 
-# 创建数据库会话
-SessionLocal = sessionmaker(
-    bind=engine,
-    autoflush=False,
-    autocommit=False
-)
+# 创建异步会话工厂
+SessionLocal = sessionmaker(bind=engine)

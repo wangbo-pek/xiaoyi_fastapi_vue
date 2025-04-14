@@ -10,8 +10,10 @@
     import {onMounted} from "vue";
     import useNoteStore from "@/store/note.ts";
     import useDiaryStore from "@/store/diary.ts";
-    import useBlogStore from "@/store/blog.ts";
+    import useSiteInformationStore from "@/store/site_info.ts";
+    import useAboutMeStore from "@/store/about_me.ts";
     import axios_server from "./utils/axios_server.ts";
+    import type {MyAbilityAndMySkill, MyTask, MyFavoriteLink} from "@/store/types/about_me.ts";
 
     defineOptions({
         name: 'App',
@@ -20,34 +22,72 @@
 
     let noteStore = useNoteStore()
     let diaryStore = useDiaryStore()
-    let blogStore = useBlogStore()
+    let siteInformationStore = useSiteInformationStore()
+    let aboutMeStore = useAboutMeStore()
 
     onMounted(() => {
-        // 每次App.vue加载，都会发送请求，设置csrf_token
-        axios_server.get('csrf/').then(() => {
-            // 每次App.vue加载，都会发送请求，获取Note文章列表信息
-            axios_server.get('getAllNoteList/').then(
-                (response) => {
-                    // 把文章列表信息保存到noteStore仓库中
-                    noteStore.noteList = response.data
-                }
-            )
-            axios_server.get('getAllDiaryList/').then(
-                (response) => {
-                    // 把文章列表信息保存到diaryStore仓库中
-                    diaryStore.diaryList = response.data
-                    diaryStore.diaryList.forEach((value) => {
-                        value.timelineColor = diaryStore.timelineColors[Math.floor(Math.random() * diaryStore.timelineColors.length)]
-                    })
-                }
-            )
-            axios_server.get('getBlogInfo/').then(
-                (response) => {
-                    blogStore.blogInfo = response.data
-                }
-            )
+        // 从后端获取所有的NoteList
+        axios_server.get('/api/notes/list').then(
+            (response) => {
+                noteStore.noteList = response.data
+            }
+        )
 
-            const canvas = document.getElementById("stars") as HTMLCanvasElement;
+        // 从后端获取所有的DiaryList (待补充)
+        axios_server.get('/api/diary/list').then(
+            (response) => {
+                diaryStore.diaryList = response.data
+            }
+        )
+
+        // 从后端获取博客网站信息
+        axios_server.get('/api/site_config').then(
+            (response) => {
+                Object.assign(siteInformationStore.siteInformation, response.data)
+            }
+        )
+
+        // 从后端获取about me的信息：my_detail、my_ability、my_detail、my_task、my_favorite_link
+        axios_server.get('/api/about_me/my_detail').then(
+            (response) => {
+                // 获取my_detail
+                Object.assign(aboutMeStore.myDetail, response.data)
+            }
+        )
+        axios_server.get('/api/about_me/my_ability').then(
+            (response) => {
+                // 获取my_ability
+                response.data.forEach((value:MyAbilityAndMySkill)=>{
+                    aboutMeStore.myAbility.push(value)
+                })
+            }
+        )
+        axios_server.get('/api/about_me/my_skill').then(
+            (response) => {
+                // 获取my_skill
+                response.data.forEach((value:MyAbilityAndMySkill)=>{
+                    aboutMeStore.mySkill.push(value)
+                })
+            }
+        )
+        axios_server.get('/api/about_me/my_task').then(
+            (response) => {
+                // 获取my_task
+                response.data.forEach((value:MyTask)=>{
+                    aboutMeStore.myTask.push(value)
+                })
+            }
+        )
+        axios_server.get('/api/about_me/my_favorite_link').then(
+            (response) => {
+                // 获取my_favorite_link
+                response.data.forEach((value:MyFavoriteLink)=>{
+                    aboutMeStore.myFavoriteLink.push(value)
+                })
+            }
+        )
+
+        const canvas = document.getElementById("stars") as HTMLCanvasElement;
             const ctx = canvas.getContext("2d")!;
             const stars: { x: number, y: number, r: number, vx: number, vy: number }[] = [];
             const STAR_COUNT = 20;
@@ -79,11 +119,10 @@
                     if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
                     if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
                 });
-                requestAnimationFrame(draw);
+                requestAnimationFrame(draw)
             }
 
-            draw();
-        })
+            draw()
     })
 </script>
 

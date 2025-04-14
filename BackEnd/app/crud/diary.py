@@ -4,11 +4,11 @@
 """
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
-from app.models import Category, Tag
+from sqlalchemy.orm import Session, joinedload
+from app.models import Tag
 from app.models.diary import Diary
 from app.models.diary_list import DiaryList
-from app.schema.diary import DiaryCreate, DiaryListCreate
+from app.schema.diary import DiaryCreate, DiaryListCreate, DiaryListOut
 
 
 def create_diary_and_list(
@@ -52,3 +52,30 @@ def create_diary_and_list(
     db.commit()
     db.refresh(diary)
     return diary
+
+
+def get_all_diary_list(db:Session) -> list[DiaryListOut]:
+    # 获取满足条件的DiaryList
+    stmt = (
+        select(DiaryList)
+        .options(joinedload(DiaryList.tags))
+    ).where(
+        DiaryList.is_show == True,
+        DiaryList.is_deleted == False
+    )
+
+    diary_lists = db.execute(stmt).unique().scalars().all()
+    result = []
+
+    for diary_list in diary_lists:
+        valid_tags = []
+        for tag in diary_list.tags:
+            if tag.is_show and not tag.is_deleted:
+                valid_tags.append(tag)
+
+        diary_list.tags = valid_tags
+        item = DiaryListOut.model_validate(diary_list)
+        result.append(item)
+    return result
+
+

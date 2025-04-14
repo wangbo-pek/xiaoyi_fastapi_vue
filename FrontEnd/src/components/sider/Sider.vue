@@ -6,24 +6,33 @@
                        :src="'https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/my_only_girl.png'"></v-img>
             </div>
             <div class="my-name">
-                <span class="my-name-text">{{ wang.nickName }}</span>
+                <span class="my-name-text">{{ aboutMeStore.myDetail.nickname }}</span>
             </div>
 
             <div class="my-short-intro">
                 <div class="my-short-intro-text">
-                    {{ wang.shortIntro }}
+                    {{ aboutMeStore.myDetail.shortIntro }}
                 </div>
             </div>
 
         </div>
         <div class="touch-me">
-            <v-img class="wechat-icon" :src="wechatMe.svgIconUrl" @click="showWechatDialog = true"></v-img>
-            <v-img class="mail-icon" :src="mailMe.svgIconUrl" @click="touchMe(mailMe.name)"></v-img>
-            <v-img class="rss-icon" :src="rssMe.svgIconUrl" @click="touchMe(rssMe.name)"></v-img>
+            <v-img class="wechat-icon"
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/wechat.svg`"
+                   @click="showWechatDialog = true">
+            </v-img>
+            <v-img class="mail-icon"
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/gmail.svg`"
+                   @click="touchMe('mailMe')">
+            </v-img>
+            <v-img class="rss-icon"
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/rss.svg`"
+                   @click="touchMe('rssMe')">
+            </v-img>
         </div>
         <div class="coffee-container" @click="showCoffeeDialog = true">
-            <span class="coffee-text">{{ coffeeMe.title }}</span>
-            <v-img class="coffee-icon" :src="coffeeMe.svgIconUrl"></v-img>
+            <span class="coffee-text">Coffee Me</span>
+            <v-img class="coffee-icon" :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/coffee.svg`"></v-img>
         </div>
     </div>
 
@@ -33,7 +42,7 @@
             <v-card-title class="text-center text-white">微信扫一扫</v-card-title>
             <v-card-text class="text-center">
                 <v-img
-                    :src="wechatMe.wechatInfo"
+                    :src="aboutMeStore.myDetail.wechatQR"
                     aspect-ratio="1"
                     contain
                 />
@@ -51,12 +60,12 @@
             <v-card-text class="text-center">
                 <div style="display: flex; justify-content: center; gap: 20px;">
                     <v-img
-                        :src="coffeeMe.coffeeMeAlipayInfo"
+                        :src="siteInformationStore.siteInformation.alipaySponsorQR"
                         aspect-ratio="1"
                         max-width="40%"
                     />
                     <v-img
-                        :src="coffeeMe.coffeeMeWechatInfo"
+                        :src="siteInformationStore.siteInformation.wechatSponsorQR"
                         aspect-ratio="1"
                         max-width="40%"
                     />
@@ -72,8 +81,10 @@
 
 <script setup lang='ts'>
     import {useRouter} from "vue-router"
+    import useAboutMeStore from "@/store/about_me.ts";
+    import useSiteInformationStore from "@/store/site_info.ts"
     import {ref} from "vue";
-    import {wang, mailMe, rssMe, wechatMe, coffeeMe} from '@/data/personalDetail.ts'
+
 
     defineOptions({
         name: 'Sider',
@@ -81,6 +92,8 @@
     })
 
     const $router = useRouter()
+    const aboutMeStore = useAboutMeStore()
+    const siteInformationStore = useSiteInformationStore()
     const showWechatDialog = ref(false)  // 控制微信二维码 dialog
     const showCoffeeDialog = ref(false)  // 控制咖啡图片 dialog
 
@@ -92,8 +105,8 @@
 
     const touchMe = (name: string) => {
         const urlMap: Record<string, string> = {
-            mailMe: mailMe.linkUrl,
-            rssMe: rssMe.linkUrl
+            mailMe: 'mailto:wangbo.pek@gmail.com',
+            rssMe: ''
         }
         const url = urlMap[name]
         if (url) {

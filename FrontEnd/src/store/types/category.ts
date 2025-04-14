@@ -3,3 +3,8 @@ export interface CategoryCount {
     "note_count": string
     "color":string
 }
+
+export interface Category {
+    name:string,
+    description:string,
+}

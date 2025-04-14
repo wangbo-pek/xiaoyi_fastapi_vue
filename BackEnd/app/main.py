@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from app.api.v1 import api_router
+from app.api import api_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title="XiaoYi_Blog",
@@ -13,4 +15,16 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
-app.include_router(api_router, prefix="/api/v1")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 或指定 ['http://localhost:5173']
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(api_router, prefix="/api")
+
+

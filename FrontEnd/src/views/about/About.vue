@@ -5,15 +5,15 @@
     <div class="about-container">
         <div class="my-avatar">
             <v-img class="my-avatar-icon"
-                   :src="wang.avatar"></v-img>
+                   :src="aboutMeStore.myDetail.avatar"></v-img>
         </div>
         <div class="my-name">
-            <span class="my-name-text">{{ wang.nickName }}</span>
+            <span class="my-name-text">{{ aboutMeStore.myDetail.nickname }}</span>
         </div>
 
         <div class="my-formal-intro">
             <div class="my-formal-intro-text">
-                {{ wang.longIntro }}
+                {{ aboutMeStore.myDetail.fullIntro }}
             </div>
         </div>
         <div class="touch-me">
@@ -33,8 +33,8 @@
                 <MyAbilitiesRadar></MyAbilitiesRadar>
             </div>
             <div class="my-skills-progress">
-                <template v-for="(item) in skills" :key="item.name">
-                    <MySkillProgress :name="item.name" :level="item.degree"></MySkillProgress>
+                <template v-for="(item) in aboutMeStore.mySkill" :key="item.name">
+                    <MySkillProgress :name="item.title" :level="item.degree"></MySkillProgress>
                 </template>
             </div>
         </div>
@@ -43,7 +43,7 @@
             ——&nbsp;&nbsp;&nbsp;我的任务&nbsp;&nbsp;&nbsp;——
         </div>
         <div class="my-current-works">
-            <div class="my-current-works-item" v-for="item in currentWorks" :key="item.title">
+            <div class="my-current-works-item" v-for="item in aboutMeStore.myTask" :key="item.title">
                 <div class="my-current-works-content">
                     <div class="my-current-works-title-status">
                         <span class="my-current-works-titles">{{ item.title }}</span>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="my-current-works-description">{{ item.description }}</div>
                     <v-progress-linear
-                        :model-value="item.currentProgress"
+                        :model-value="item.progress"
                         height="8"
                         color="rgb(242, 204, 15)"
                         class="current-progress"
@@ -67,7 +67,7 @@
             ——&nbsp;&nbsp;&nbsp;我的收藏&nbsp;&nbsp;&nbsp;——
         </div>
         <div class="my-favorite-link">
-            <template v-for="item in links" :key="item.title">
+            <template v-for="item in aboutMeStore.myFavoriteLink" :key="item.title">
                 <div class="links-container">
                     <v-img class="link-icon"
                            :src="item.faviconUrl"></v-img>
@@ -106,6 +106,7 @@
 
 <script setup lang='ts'>
     import {onMounted, onUnmounted, watch} from "vue";
+    import useAboutMeStore from "@/store/about_me.ts";
     import useAppearanceStore from "@/store/appearance.ts";
     import useNoteStore from "@/store/note.ts";
     import useDiaryStore from "@/store/diary.ts";
@@ -113,15 +114,13 @@
     import Footer from "@/components/footer/Footer.vue";
     import MyAbilitiesRadar from "@/components/MyAbilitiesRadar.vue"
     import MySkillProgress from "@/components/MySkillProgress.vue"
-    import {skills, currentWorks} from '@/data/about.ts'
-    import {wang} from '@/data/personalDetail.ts'
-    import {links} from "@/data/favoriteLinks.ts";
 
     defineOptions({
         name: 'About',
         inheritAttrs: false
     })
 
+    const aboutMeStore = useAboutMeStore()
     let appearanceStore = useAppearanceStore()
     const noteStore = useNoteStore()
     const diaryStore = useDiaryStore()

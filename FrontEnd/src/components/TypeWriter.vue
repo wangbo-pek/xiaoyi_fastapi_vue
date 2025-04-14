@@ -6,7 +6,7 @@
 
 <script setup lang='ts'>
     import {watch, onMounted, ref} from "vue";
-    import type {TypingWriter} from "@/store/types/Writer.ts";
+    import type {TypingWriter} from "@/store/types/writer.ts";
 
     defineOptions({
         name: 'TypeWriter',

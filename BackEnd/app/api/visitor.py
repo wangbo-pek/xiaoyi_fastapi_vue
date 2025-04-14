@@ -1,5 +1,5 @@
 """
-    path: xiaoyi/BackEnd/app/api/v1/visitor.py
+    path: xiaoyi/BackEnd/app/api/visitor.py
     description: 访客统计相关路由、视图函数
 """
 

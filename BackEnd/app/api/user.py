@@ -1,5 +1,5 @@
 """
-    path: xiaoyi/BackEnd/app/api/v1/user.py
+    path: xiaoyi/BackEnd/app/api/user.py
     description: 后台管理用户的路由、视图函数
 """
 

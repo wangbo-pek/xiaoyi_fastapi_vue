@@ -1,5 +1,5 @@
 """
-    path: xiaoyi/BackEnd/app/api/v1/comment.py
+    path: xiaoyi/BackEnd/app/api/comment.py
     description: 评论路由、视图函数
 """
 

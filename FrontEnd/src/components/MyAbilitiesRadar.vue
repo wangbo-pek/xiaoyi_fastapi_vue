@@ -8,10 +8,12 @@
     import {ref, onMounted} from 'vue'
     import * as echarts from 'echarts'
 
-    defineOptions({name: 'MyAbilitiesRadar', inheritAttrs: false})
+    defineOptions({
+        name: 'MyAbilitiesRadar',
+        inheritAttrs: false
+    })
 
     const chartRef = ref<HTMLDivElement | null>(null)
-
     onMounted(() => {
         if (chartRef.value) {
             const myChart = echarts.init(chartRef.value)

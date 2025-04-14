@@ -26,7 +26,7 @@ class DiaryList(Base):
     updated_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now,
                                                    nullable=False, comment='修改时间')
 
-    # 文章状态
+    # 日记状态
     is_show: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, comment='日记是否可见')
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, comment='是否被软删除')
     status: Mapped[int] = mapped_column(Integer, default=0, nullable=False, comment='日记状态(草稿、发布)')
