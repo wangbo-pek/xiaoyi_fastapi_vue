@@ -35,6 +35,8 @@ def create_diary_and_list(
         title=diary_list_data.title,
         brief=diary_list_data.brief,
         cover_img=diary_list_data.cover_img,
+        word_count=diary_list_data.word_count,
+        reading_time=diary_list_data.reading_time,
         tags=tag_objs
     )
 

@@ -19,6 +19,8 @@ class DiaryListCreate(BaseModel):
     brief: str = Field(..., description="日记摘要")
     cover_img: str = Field(..., description="封面图URL")
     tags: List[str] = Field(default_factory=list, description="标签列表")
+    reading_time: int = Field(..., description='阅读时间')
+    word_count: int = Field(..., description='字数')
 
 
 class DiaryListOut(BaseModel):

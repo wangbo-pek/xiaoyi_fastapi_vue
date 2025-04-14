@@ -51,7 +51,7 @@ class NoteList(Base):
     note: Mapped["Note"] = relationship(back_populates='note_list', uselist=False)
 
     # Note n:1 Category
-    category_id: Mapped[int] = mapped_column(ForeignKey('category.id'), nullable=False, unique=True,
+    category_id: Mapped[int] = mapped_column(ForeignKey('category.id'), nullable=False,
                                              comment='对应分类id')
     category: Mapped["Category"] = relationship(back_populates='notes_list')
 

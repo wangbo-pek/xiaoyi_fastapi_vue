@@ -5,14 +5,14 @@
                 <span class="info-text">Copyright</span>
                 <v-icon class="info-icon" icon="mdi-copyright"></v-icon>
                 <span class="info-text">2023 - 2025 &nbsp;&nbsp;</span>
-                <span class="info-text strong-text">写死的my name</span>
+                <span class="info-text strong-text">{{ aboutMeStore.myDetail.nickname }}</span>
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;Powered By </span>
                 <span class="info-text strong-text">FastAPI + Vue</span>
             </div>
             <div class="second-line">
                 <v-icon class="info-icon" icon="mdi-text-long"></v-icon>
                 <span class="info-text">站点总文章数：</span>
-                <span class="info-text strong-text">写死的2篇</span>
+                <span class="info-text strong-text">{{ article_count }}篇</span>
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <v-icon class="info-icon" icon="mdi-chart-areaspline"></v-icon>
                 <span class="info-text">站点总字数：</span>
@@ -24,7 +24,7 @@
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <v-icon class="info-icon" icon="mdi-cloud-outline"></v-icon>
                 <span class="info-text">本站已运行：</span>
-                <span class="info-text strong-text">写死的2天</span>
+                <span class="info-text strong-text">{{ blog_duation }}天</span>
             </div>
         </div>
         <div class="touch-me">
@@ -54,15 +54,25 @@
 
 <script setup lang='ts'>
     import useSiteInformationStore from "@/store/site_info.ts";
+    import useNoteStore from "@/store/note.ts";
+    import useDiaryStore from "@/store/diary.ts";
+    import useAboutMeStore from "@/store/about_me.ts";
     import {mailMe, rssMe, wechatMe} from "@/data/personalDetail.ts";
     import {ref} from "vue";
+    import dayjs from "dayjs";
 
     defineOptions({
         name: 'Footer',
         inheritAttrs: false
     })
     const showWechatDialog = ref(false)
+    const aboutMeStore = useAboutMeStore()
+    const noteStore= useNoteStore()
+    const diaryStore= useDiaryStore()
     const siteInformationStore = useSiteInformationStore()
+
+    const article_count = noteStore.noteList.length + diaryStore.diaryList.length
+    const blog_duation = dayjs().diff(dayjs(siteInformationStore.siteInformation.createdTime), 'days')
 
     const touchMe = (name: string) => {
         const urlMap: Record<string, string> = {
@@ -89,12 +99,13 @@
         .copy-right {
             width: 50%;
 
+
             .first-line,
             .second-line,
             .third-line {
                 color: rgba(255, 255, 255, 0.75);
                 width: 100%;
-                max-width: 600px;
+                max-width: 750px;
                 text-align: left;
                 padding: 5px;
                 box-sizing: border-box;

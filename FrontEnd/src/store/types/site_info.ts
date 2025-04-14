@@ -9,6 +9,7 @@ export interface SiteInformation {
     "keywords": string,
     "description": string,
     "createdTime": string,
+    "updatedTime": string,
     "wechatSponsorQR": string,
     "alipaySponsorQR": string,
 }

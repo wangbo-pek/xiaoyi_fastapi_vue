@@ -21,6 +21,8 @@ class NoteListCreate(BaseModel):
     cover_img: str = Field(..., description="封面图 URL")
     category: str = Field(..., description="分类名称")
     tags: List[str] = Field(default_factory=list, description="标签列表")
+    reading_time: int = Field(..., description='阅读时间')
+    word_count:int = Field(..., description='字数')
 
 
 class NoteListOut(BaseModel):
@@ -28,9 +30,9 @@ class NoteListOut(BaseModel):
     title: str = Field(..., description='文章标题')
     brief: str = Field(..., description='文章摘要')
     cover_img: str = Field(..., description='封面图url', alias='coverImg')
-    slug: str = Field(..., description='url别名')
-    keyword: str = Field(..., description='关键字')
-    description: str = Field(..., description='文章描述')
+    slug: Optional[str] = Field(..., description='url别名')
+    keyword: Optional[str] = Field(..., description='关键字')
+    description: Optional[str] = Field(..., description='文章描述')
     category: CategoryOut = Field(..., description='文章分类')
     tags: List[TagOut] = Field(default_factory=list, description='文章的标签列表')
 

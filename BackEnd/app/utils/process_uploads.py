@@ -30,6 +30,14 @@ def extract_text(md_text: str, max_length: int = 100) -> str:
     return cleaned[:max_length]
 
 
+def calculate_word_count(content:str) -> int:
+    return len(content.replace('\n', '').replace('\r', '').replace(' ',''))
+
+
+def estimate_reading_time(word_count:int, average_wpm:int=500) -> int:
+    return max(1, round(word_count / average_wpm))
+
+
 def process_uploads():
     upload_path = Path("/Users/wangbo/Documents/uploads")
     if not upload_path.exists():
@@ -112,6 +120,9 @@ def process_uploads():
         # 去除结构行后的 markdown 内容
         content = '\n'.join(lines)
 
+        word_count = calculate_word_count(md_content)
+        reading_time = estimate_reading_time(word_count)
+
         db = SessionLocal()
         # 创建数据
         try:
@@ -128,7 +139,9 @@ def process_uploads():
                         brief=brief,
                         cover_img=cover_url,
                         category=category,
-                        tags=tags
+                        tags=tags,
+                        reading_time=reading_time,
+                        word_count=word_count
                     )
                 )
                 print(f'✅ 成功保存笔记：{title}')
@@ -148,7 +161,9 @@ def process_uploads():
                         title=title,
                         brief=brief,
                         cover_img=cover_url,
-                        tags=tags
+                        tags=tags,
+                        reading_time=reading_time,
+                        word_count=word_count
                     )
                 )
                 print(f'✅ 成功保存笔记：{title}')

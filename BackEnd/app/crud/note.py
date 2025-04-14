@@ -41,6 +41,8 @@ def create_note_and_list(
         brief=note_list_data.brief,
         cover_img=note_list_data.cover_img,
         category=category_obj,
+        word_count=note_list_data.word_count,
+        reading_time=note_list_data.reading_time,
         tags=tag_objs
     )
 
@@ -90,6 +92,5 @@ def get_all_note_list(db: Session) -> list[NoteListOut]:
         note_list.tags = valid_tags
         item = NoteListOut.model_validate(note_list)
         result.append(item)
-
     return result
 

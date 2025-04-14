@@ -4,8 +4,8 @@
         <div class="diary-timeline">
             <v-timeline class="diary-timeline" align="start" line-color="rgba(255, 255, 255, 0.5)">
                 <v-timeline-item
-                    v-for="(diary, index) in diaryStore.diaryList"
-                    :key="index"
+                    v-for="diary in diaryStore.diaryList"
+                    :key="diary.coverImg"
                     :dot-color="diary.timelineColor.pointColor"
                     size="small"
                     fill-dot
@@ -40,7 +40,8 @@
 </template>
 
 <script setup lang='ts'>
-    import {onMounted, onUnmounted} from "vue";
+
+import {onMounted, onUnmounted} from "vue";
     import useAppearanceStore from "@/store/appearance.ts";
     import useDiaryStore from "@/store/diary.ts";
     import {useRouter} from "vue-router";

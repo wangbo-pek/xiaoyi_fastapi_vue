@@ -6,8 +6,8 @@
                     :title="item.title"
                     :bgImage="item.coverImg"
                     :createdDate="item.createdTime"
-                    :category="item.category"
-                    :tags="item.tagsName"
+                    :category="item.category.name"
+                    :tags="item.tags"
                     @click="() => openDialog(item.noteListId)"
                 ></Card>
             </template>
@@ -29,14 +29,14 @@
                 <!-- 标签、分类展示区域 -->
                 <div class="tags-category-container">
                     <div class="tags-container">
-                    <span class="tag" v-for="(tag, index) in currentDetail?.tagsName" :key="index">
-                        {{ tag }}
+                    <span class="tag" v-for="(tag, index) in currentDetail?.tags" :key="index">
+                        {{ tag.name }}
                     </span>
                     </div>
                     <div class="category-container">
                         <span class="category">
                             <v-icon class="category-icon" icon="mdi-bookmark-multiple"></v-icon>
-                            <span class="category-text">{{ currentDetail?.category }}</span>
+                            <span class="category-text">{{ currentDetail?.category.name }}</span>
                         </span>
                     </div>
                 </div>
@@ -47,24 +47,24 @@
                         <v-icon class="created-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
                         <span class="created-date-text">{{ currentDetail?.createdTime }}</span>
                     </span>
-                    <span class="modified-date">
-                        <v-icon class="modified-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
-                        <span class="modified-date-text">{{ currentDetail?.modifiedTime }}</span>
+                    <span class="updated-date">
+                        <v-icon class="updated-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
+                        <span class="updated-date-text">{{ currentDetail?.updatedTime }}</span>
                     </span>
 
-                    <span class="viewed">
-                        <v-icon class="viewed-icon" icon="mdi-eye-outline"></v-icon>
-                        <span class="viewed-text">{{ currentDetail?.viewedCount }}</span>
+                    <span class="view">
+                        <v-icon class="view-icon" icon="mdi-eye-outline"></v-icon>
+                        <span class="view-text">{{ currentDetail?.viewCount }}</span>
                     </span>
 
-                    <span class="liked">
-                        <v-icon class="liked-icon" icon="mdi-heart-outline"></v-icon>
-                        <span class="liked-text">{{ currentDetail?.likedCount }}</span>
+                    <span class="like">
+                        <v-icon class="like-icon" icon="mdi-heart-outline"></v-icon>
+                        <span class="like-text">{{ currentDetail?.likeCount }}</span>
                     </span>
 
-                    <span class="disgusted">
-                        <v-icon class="disgusted-icon" icon="mdi-heart-off-outline"></v-icon>
-                        <span class="disgusted-text">{{ currentDetail?.disgustedCount }}</span>
+                    <span class="dislike-icon">
+                        <v-icon class="dislike-icon-icon" icon="mdi-heart-off-outline"></v-icon>
+                        <span class="dislike-icon-text">{{ currentDetail?.dislikeCount }}</span>
                     </span>
 
                 </div>
@@ -276,68 +276,68 @@
                     }
                 }
 
-                .modified-date {
+                .updated-date {
                     display: flex;
                     align-items: center;
                     gap: 4px;
 
-                    .modified-date-icon {
+                    .updated-date-icon {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                     }
 
-                    .modified-date-text {
-                        color: rgba(0, 40, 40, 0.75);
-                        font-size: 0.9rem;
-                        font-weight: 700;
-                    }
-                }
-
-                .viewed {
-                    display: flex;
-                    align-items: center;
-                    gap: 5px;
-
-                    .viewed-icon {
-                        color: rgba(0, 40, 40, 0.75);
-                        font-size: 0.9rem;
-                    }
-
-                    .viewed-text {
+                    .updated-date-text {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                         font-weight: 700;
                     }
                 }
 
-                .liked {
+                .view {
                     display: flex;
                     align-items: center;
                     gap: 5px;
 
-                    .liked-icon {
+                    .view-icon {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                     }
 
-                    .liked-text {
+                    .view-text {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                        font-weight: 700;
+                    }
+                }
+
+                .like {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    .like-icon {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                    }
+
+                    .like-text {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 14px;
                         font-weight: 700;
                     }
                 }
 
-                .disgusted {
+                .dislike {
                     display: flex;
                     align-items: center;
                     gap: 5px;
 
-                    .disgusted-icon {
+                    .dislike-icon {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                     }
 
-                    .disgusted-text {
+                    .dislike-text {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                         font-weight: 700;
@@ -387,7 +387,7 @@
                         .read-more-text {
                             color: white;
                             font-size: 0.85rem;
-                            font-weight: 800;
+                            font-weight: 600;
                         }
                     }
                 }
@@ -404,7 +404,7 @@
                         .exit-text {
                             color: white;
                             font-size: 0.85rem;
-                            font-weight: 300;
+                            font-weight: 400;
                         }
                     }
                 }

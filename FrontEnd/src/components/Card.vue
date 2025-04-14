@@ -24,10 +24,10 @@
 
                 <!-- tags -->
                 <div class="tags">
-                    <template v-for="(tag, index) in tags" :key="index">
+                    <template v-for="tag in tags" :key="tag.name">
                         <span class="tag">
                             <v-icon class="tag-icon" icon="mdi-tag-outline"></v-icon>
-                            <span class="tag-text">{{ tag }}</span>
+                            <span class="tag-text">{{ tag.name }}</span>
                         </span>
                     </template>
                 </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script setup lang='ts'>
+    import type {Tag} from "@/store/types/tag.ts";
 
     defineOptions({
         name: 'Card',
@@ -48,7 +49,7 @@
         bgImage: string
         createdDate: string
         category: string
-        tags: string[]
+        tags: Tag[]
     }>()
 
 </script>
@@ -158,7 +159,7 @@
                     background: rgba(255, 255, 255, 0.2);
                     padding: 2px 5px;
                     border-radius: 4px;
-                    font-size: 0.75rem;
+                    font-size: 0.65rem;
 
                     .tag-icon {
                         font-size: 0.75rem;
