@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models import Category, Tag
 from app.models.note import Note
 from app.models.note_list import NoteList
-from app.schema.note import NoteCreate, NoteListCreate, NoteListOut
+from app.schema.note import NoteCreate, NoteListCreate
 
 
 def create_note_and_list(
@@ -62,7 +62,7 @@ def create_note_and_list(
     return note
 
 
-def get_all_note_list(db: Session) -> list[NoteListOut]:
+def fetch_all_note_list_from_db(db: Session) -> list[NoteList]:
     # 获取满足条件的NoteList
     stmt = (
         select(NoteList)
@@ -81,16 +81,16 @@ def get_all_note_list(db: Session) -> list[NoteListOut]:
 
     note_lists = db.execute(stmt).unique().scalars().all()
 
-    result = []
-
     for note_list in note_lists:
         valid_tags = []
         for tag in note_list.tags:
             if tag.is_show and not tag.is_deleted:
                 valid_tags.append(tag)
-
         note_list.tags = valid_tags
-        item = NoteListOut.model_validate(note_list)
-        result.append(item)
-    return result
 
+    return list(note_lists)
+
+
+def fetch_note_from_db(db:Session, note_list_id:int) -> Note:
+    stmt = select(Note).where(Note.note_list_id == note_list_id)
+    return db.execute(stmt).scalar_one_or_none()

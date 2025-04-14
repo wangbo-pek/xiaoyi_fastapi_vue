@@ -19,8 +19,8 @@ export default defineConfig({
             scss: {
                 // 自动引入
                 additionalData: `
-                @import "@/styles/variables.scss";
-                @import "@/styles/mixins.scss";
+                @use "@/styles/variables.scss";
+                @use "@/styles/mixins.scss";
                 `
             }
         }

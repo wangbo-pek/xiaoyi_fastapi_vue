@@ -50,3 +50,13 @@ class NoteListOut(BaseModel):
     class Config:
         from_attributes = True
         validate_by_name = True
+
+
+class NoteOut(BaseModel):
+    title:str = Field(..., description='文章标题')
+    content:str = Field(..., description='文章主体(markdown)', alias='markdownContent')
+    image_url:List[str] = Field(default=None, description='文章插图', alias='imageUrls')
+
+    class Config:
+        from_attributes = True
+        validate_by_name = True

@@ -152,6 +152,25 @@
     text-decoration: underline; /* 添加下划线 */
 }
 
+:deep(.markdown-content ul a),
+:deep(.markdown-content ol a) {
+  color: #14b478; /* 默认链接色，蓝色 */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+:deep(.markdown-content ul a:hover),
+:deep(.markdown-content ol a:hover) {
+  color: #ffa726; /* hover 时橙色 */
+  text-decoration: underline;
+}
+
+:deep(.markdown-content ul li),
+:deep(.markdown-content ol li) {
+  margin-bottom: 6px; /* 稍微拉开一点间距 */
+}
+
 :deep(.toc-title) {
     display: flex;
     align-items: center;
@@ -159,7 +178,7 @@
     margin: 5px auto 10px 10px;
     font-size: 0.9em; /* 设置字体大小 */
     font-weight: 700; /* 设置字体加粗 */
-    color: #9cece0;
+    color: #14b478;
 }
 
 :deep(.toc) {
@@ -174,16 +193,6 @@
 
     li ul {
         padding-left: 1.2rem;
-    }
-
-    a {
-        color: #00bfa5;
-        text-decoration: none;
-        font-weight: 600;
-
-        &:hover {
-            text-decoration: underline;
-        }
     }
 }
 

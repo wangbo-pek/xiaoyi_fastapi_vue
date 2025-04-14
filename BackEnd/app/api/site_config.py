@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.deps.db import get_db
 from app.schema.site_info import SiteInfoOut
 from app.schema.response import ResponseModel
-from app.crud.site_config import get_site_info
+from app.crud.site_config import fetch_site_info_from_db
 
 router = APIRouter(prefix="/site_config", tags=["网站设置管理"])
 
@@ -21,8 +21,8 @@ router = APIRouter(prefix="/site_config", tags=["网站设置管理"])
             summary='获取所有网站信息',
             description='无参数，获取数据库中关于博客网站的信息'
             )
-async def site_config(db: Session = Depends(get_db)):
-    data = get_site_info(db)
+async def get_site_config(db: Session = Depends(get_db)):
+    data = SiteInfoOut.model_validate(fetch_site_info_from_db(db))
     result = {
         "code": 1,
         "message": "success",

@@ -56,7 +56,7 @@ def create_diary_and_list(
     return diary
 
 
-def get_all_diary_list(db:Session) -> list[DiaryListOut]:
+def fetch_all_diary_list_from_db(db:Session) -> list[DiaryList]:
     # 获取满足条件的DiaryList
     stmt = (
         select(DiaryList)
@@ -67,7 +67,6 @@ def get_all_diary_list(db:Session) -> list[DiaryListOut]:
     )
 
     diary_lists = db.execute(stmt).unique().scalars().all()
-    result = []
 
     for diary_list in diary_lists:
         valid_tags = []
@@ -76,8 +75,6 @@ def get_all_diary_list(db:Session) -> list[DiaryListOut]:
                 valid_tags.append(tag)
 
         diary_list.tags = valid_tags
-        item = DiaryListOut.model_validate(diary_list)
-        result.append(item)
-    return result
+    return list(diary_lists)
 
 

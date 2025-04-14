@@ -47,6 +47,7 @@
                         <v-icon class="created-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
                         <span class="created-date-text">{{ currentDetail?.createdTime }}</span>
                     </span>
+
                     <span class="updated-date">
                         <v-icon class="updated-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
                         <span class="updated-date-text">{{ currentDetail?.updatedTime }}</span>
@@ -62,9 +63,19 @@
                         <span class="like-text">{{ currentDetail?.likeCount }}</span>
                     </span>
 
-                    <span class="dislike-icon">
-                        <v-icon class="dislike-icon-icon" icon="mdi-heart-off-outline"></v-icon>
-                        <span class="dislike-icon-text">{{ currentDetail?.dislikeCount }}</span>
+                    <span class="dislike">
+                        <v-icon class="dislike-icon" icon="mdi-heart-off-outline"></v-icon>
+                        <span class="dislike-text">{{ currentDetail?.dislikeCount }}</span>
+                    </span>
+
+                    <span class="word_count">
+                        <v-icon class="word_count-icon" icon="mdi-ab-testing"></v-icon>
+                        <span class="word_count-text">{{ currentDetail?.wordCount }}字</span>
+                    </span>
+
+                    <span class="reading-time">
+                        <v-icon class="reading-time-icon" icon="mdi-clock-outline"></v-icon>
+                        <span class="reading-time-text">{{ currentDetail?.readingTime }}分钟</span>
                     </span>
 
                 </div>
@@ -73,6 +84,7 @@
                 <div class="title-container">
                     <span class="title">{{ currentDetail?.title }}</span>
                 </div>
+
                 <!-- 文章摘要展示区域 -->
                 <div class="brief-container">
                     <span class="brief">{{ currentDetail?.brief }}</span>
@@ -256,7 +268,7 @@
             .article-info-container {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 30px;
+                gap: 20px;
                 margin: 30px 0 20px 0;
 
                 .created-date {
@@ -296,7 +308,7 @@
                 .view {
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
 
                     .view-icon {
                         color: rgba(0, 40, 40, 0.75);
@@ -313,7 +325,7 @@
                 .like {
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
 
                     .like-icon {
                         color: rgba(0, 40, 40, 0.75);
@@ -322,7 +334,7 @@
 
                     .like-text {
                         color: rgba(0, 40, 40, 0.75);
-                        font-size: 14px;
+                        font-size: 0.9rem;
                         font-weight: 700;
                     }
                 }
@@ -330,7 +342,7 @@
                 .dislike {
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
 
                     .dislike-icon {
                         color: rgba(0, 40, 40, 0.75);
@@ -338,6 +350,40 @@
                     }
 
                     .dislike-text {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                        font-weight: 700;
+                    }
+                }
+
+                .word_count {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    .word_count-icon {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                    }
+
+                    .word_count-text {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                        font-weight: 700;
+                    }
+                }
+
+                .reading-time {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    .reading-time-icon {
+                        color: rgba(0, 40, 40, 0.75);
+                        font-size: 0.9rem;
+                    }
+
+                    .reading-time-text {
                         color: rgba(0, 40, 40, 0.75);
                         font-size: 0.9rem;
                         font-weight: 700;

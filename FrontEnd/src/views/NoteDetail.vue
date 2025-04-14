@@ -27,14 +27,14 @@
             <!-- 标签、分类区域 -->
             <div class="tags-category-container">
                 <div class="tags-container">
-                    <span class="tag" v-for="(tag, index) in noteStore.currentNote.tagsName" :key="index">
-                        {{ tag }}
+                    <span class="tag" v-for="(tag, index) in noteStore.currentNote.tags" :key="index">
+                        {{ tag.name }}
                     </span>
                 </div>
                 <div class="category-container">
                     <span class="category">
                         <v-icon class="category-icon" icon="mdi-bookmark-multiple"></v-icon>
-                        <span class="category-text">{{ noteStore.currentNote.category }}</span>
+                        <span class="category-text">{{ noteStore.currentNote.category.name }}</span>
                     </span>
                 </div>
             </div>
@@ -46,24 +46,34 @@
                     <span class="created-date-text">{{ noteStore.currentNote.createdTime }}</span>
                 </span>
 
-                <span class="modified-date">
-                    <v-icon class="modified-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
-                    <span class="modified-date-text">{{ noteStore.currentNote.modifiedTime }}</span>
+                <span class="updated-date">
+                    <v-icon class="updated-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
+                    <span class="updated-date-text">{{ noteStore.currentNote.updatedTime }}</span>
                 </span>
 
-                <span class="viewed">
-                    <v-icon class="viewed-icon" icon="mdi-eye-outline"></v-icon>
-                    <span class="viewed-text">{{ noteStore.currentNote.viewedCount }}</span>
+                <span class="view">
+                    <v-icon class="view-icon" icon="mdi-eye-outline"></v-icon>
+                    <span class="view-text">{{ noteStore.currentNote.viewCount }}</span>
                 </span>
 
-                <span class="liked">
-                    <v-icon class="liked-icon" icon="mdi-heart-outline"></v-icon>
-                    <span class="liked-text">{{ noteStore.currentNote.likedCount }}</span>
+                <span class="like">
+                    <v-icon class="like-icon" icon="mdi-heart-outline"></v-icon>
+                    <span class="like-text">{{ noteStore.currentNote.likeCount }}</span>
                 </span>
-                <span class="disgusted">
-                    <v-icon class="disgusted-icon" icon="mdi-heart-off-outline"></v-icon>
-                    <span class="disgusted-text">{{ noteStore.currentNote.disgustedCount }}</span>
+                <span class="dislike">
+                    <v-icon class="dislike-icon" icon="mdi-heart-off-outline"></v-icon>
+                    <span class="dislike-text">{{ noteStore.currentNote.dislikeCount }}</span>
                 </span>
+
+                <span class="word_count">
+                        <v-icon class="word_count-icon" icon="mdi-ab-testing"></v-icon>
+                        <span class="word_count-text">{{ noteStore.currentNote.wordCount }}字</span>
+                    </span>
+
+                    <span class="reading-time">
+                        <v-icon class="reading-time-icon" icon="mdi-clock-outline"></v-icon>
+                        <span class="reading-time-text">{{ noteStore.currentNote.readingTime }}分钟</span>
+                    </span>
             </div>
 
             <div class="divider1"></div>
@@ -119,9 +129,8 @@
             <!-- 文章外部link区域 -->
             <div class="share-container">
                 <div class="tags">
-                    <span class="tag" v-for="(tag, index) in noteStore.currentNote.tagsName" :key="index">{{
-                            tag
-                        }}</span>
+                    <span class="tag" v-for="(tag, index) in noteStore.currentNote.tags"
+                          :key="index">{{ tag.name }}</span>
                 </div>
                 <div class="share-icon">
                     <v-img class="shaoshupai-icon" :src="shaoshupai.svgIconUrl"
@@ -147,7 +156,6 @@
     <div class="recommend-note-container">
     </div>
 
-    <!-- coffee me -->
     <v-dialog v-model="showCoffeeDialog" width="800">
         <v-card class="qr-card" color="#1e1e1e">
             <v-card-title class="text-center text-white">感谢您的支持!</v-card-title>
@@ -194,9 +202,6 @@
         inheritAttrs: false
     })
 
-    const md = new MarkdownIt({
-        html: true
-    })
     const route = useRoute()
     const noteStore = useNoteStore()
     const noteListId = Number(route.params.id)
@@ -212,6 +217,40 @@
             let rect = coverImageRef.value.getBoundingClientRect()
             isScrollOverViewport.value = rect.bottom <= 55
         }
+    }
+
+    const md = new MarkdownIt({
+        html: true,
+        linkify: true, // 识别纯链接如 https://xxx.com
+        typographer: true // 美化排版符号，如引号等
+    })
+
+    // 保存默认的渲染方法（后面我们会用）
+    const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+        return self.renderToken(tokens, idx, options)
+    }
+
+    // 重写 link_open 渲染逻辑，添加 target 和 rel
+    md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+        const token = tokens[idx]
+
+        // 如果没有 target="_blank"，就添加
+        const targetIndex = token.attrIndex('target')
+        if (targetIndex < 0) {
+            token.attrPush(['target', '_blank'])
+        } else {
+            token.attrs![targetIndex][1] = '_blank'
+        }
+
+        // 添加 rel="noopener noreferrer"（防止 window.opener 漏洞）
+        const relIndex = token.attrIndex('rel')
+        if (relIndex < 0) {
+            token.attrPush(['rel', 'noopener noreferrer'])
+        } else {
+            token.attrs![relIndex][1] = 'noopener noreferrer'
+        }
+
+        return defaultRender(tokens, idx, options, env, self)
     }
 
     // 前端展示table of contents的内容
@@ -316,18 +355,19 @@
 
     onMounted(async () => {
         // 页面加载时，从后端获取文章content
-        const result = await axios_server.get('getNoteAllContent/', {
-            params: {
-                noteListId
+        axios_server.get(`/api/note/${noteListId}`).then(
+            (response) => {
+                const found = noteStore.noteList.find((value) => {
+                    return value.noteListId == noteListId
+                })
+                Object.assign(noteStore.currentNote, found, response.data)
+
+                // 将markdown进行渲染
+                noteStore.currentNote.renderedMarkdown = md.render(noteStore.currentNote.markdownContent)
+                // 调用 handleTableOfContents 来处理table of contents
+                handleTableOfContents()
             }
-        })
-        Object.assign(noteStore.currentNote, result.data)
-
-        // 将markdown进行渲染
-        noteStore.currentNote.renderedMarkdown = md.render(noteStore.currentNote.markdownContent)
-
-        // 调用 handleTableOfContents 来处理table of contents
-        handleTableOfContents()
+        )
 
         // 调用 highlightCode 来处理代码高亮
         highlightCode()
@@ -352,14 +392,6 @@
         // 页面卸载时移除监听
         window.removeEventListener('scroll', handleScroll)
     })
-
-    // 解析并高亮代码块
-    // const highlightCode = () => {
-    //     const codeBlock = document.querySelectorAll('pre code')
-    //     codeBlock.forEach((block) => {
-    //         hljs.highlightElement(block as HTMLElement)
-    //     })
-    // }
 
     const highlightCode = () => {
         console.log("📋 highlightCode 执行了")
@@ -584,65 +616,97 @@
                     }
                 }
 
-                .modified-date {
+                .updated-date {
                     display: flex;
                     align-items: center;
                     gap: 4px;
 
-                    .modified-date-icon {
+                    .updated-date-icon {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
 
-                    .modified-date-text {
-                        color: rgb(20, 200, 150);
-                        font-size: 1rem;
-                    }
-                }
-
-                .viewed {
-                    display: flex;
-                    align-items: center;
-                    gap: 5px;
-
-                    .viewed-icon {
-                        color: rgb(20, 200, 150);
-                        font-size: 1rem;
-                    }
-
-                    .viewed-text {
+                    .updated-date-text {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
                 }
 
-                .liked {
+                .view {
                     display: flex;
                     align-items: center;
                     gap: 5px;
 
-                    .liked-icon {
+                    .view-icon {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
 
-                    .liked-text {
+                    .view-text {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
                 }
 
-                .disgusted {
+                .like {
                     display: flex;
                     align-items: center;
                     gap: 5px;
 
-                    .disgusted-icon {
+                    .like-icon {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
 
-                    .disgusted-text {
+                    .like-text {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+                }
+
+                .dislike {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    .dislike-icon {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+
+                    .dislike-text {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+                }
+
+                .word_count {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    .word_count-icon {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+
+                    .word_count-text {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+                }
+
+                .reading-time {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    .reading-time-icon {
+                        color: rgb(20, 200, 150);
+                        font-size: 1rem;
+                    }
+
+                    .reading-time-text {
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }

@@ -21,8 +21,8 @@
                         :title="item.title"
                         :bgImage="item.coverImg"
                         :createdDate="item.createdTime"
-                        :category="item.category"
-                        :tags="item.tagsName"
+                        :category="item.category.name"
+                        :tags="item.tags"
                         @click="jumpToNoteDetail(item.noteListId)"
                     ></Card>
                 </template>
@@ -39,8 +39,8 @@
                         :title="item.title"
                         :bgImage="item.coverImg"
                         :createdDate="item.createdTime"
-                        :category="item.category"
-                        :tags="item.tagsName"
+                        :category="item.category.name"
+                        :tags="item.tags"
                         @click="jumpToNoteDetail(item.noteListId)"
                     ></Card>
                 </template>
@@ -75,9 +75,10 @@
         })
     }
 
-    // 监听App.vue是否拿到了NoteList，如果拿到了，就获取被置顶的文章、最新的文章
+    // 监听App.vue是否拿到了NoteList，如果拿到了，就获取被推荐的文章、最新的文章
     watch(() => noteStore.noteList, () => {
-        // 获取被置顶的文章
+        // 获取被推荐的文章
+        console.log('@@@@@@')
         noteStore.recommendedNoteList = noteStore.noteList.filter((value) => {
             return value.isRecommended === true
         })

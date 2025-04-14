@@ -6,10 +6,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models.site_info import SiteInfo
-from app.schema.site_info import SiteInfoOut
 
-def get_site_info(db: Session) -> SiteInfoOut:
+def fetch_site_info_from_db(db: Session) -> SiteInfo:
     stmt = select(SiteInfo)
-    site_info = db.execute(stmt).scalar_one_or_none()
-    site_info = SiteInfoOut.model_validate(site_info)
-    return site_info
+    return db.execute(stmt).scalar_one_or_none()

@@ -28,8 +28,9 @@
 
     onMounted(() => {
         // 从后端获取所有的NoteList
-        axios_server.get('/api/notes/list').then(
+        axios_server.get('/api/note/list').then(
             (response) => {
+                // Object.assign(noteStore.noteList, response.data)
                 noteStore.noteList = response.data
                 noteStore.noteList.forEach((value) => {
                     value.createdTime = dayjs(value.createdTime).format('YYYY-MM-DD')
@@ -38,7 +39,7 @@
             }
         )
 
-        // 从后端获取所有的DiaryList (待补充)
+        // 从后端获取所有的DiaryList
         axios_server.get('/api/diary/list').then(
             (response) => {
                 diaryStore.diaryList = response.data

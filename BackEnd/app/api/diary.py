@@ -5,7 +5,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.crud.diary import get_all_diary_list
+from app.crud.diary import fetch_all_diary_list_from_db
 from app.deps.db import get_db
 from app.schema.diary import DiaryListOut
 from app.schema.response import ResponseModel
@@ -19,7 +19,11 @@ router = APIRouter(prefix="/diary", tags=["日记管理"])
             description='无参数，获取数据库中所有NoteList'
             )
 async def get_diary_list(db: Session = Depends(get_db)):
-    data = get_all_diary_list(db)
+    diary_lists = fetch_all_diary_list_from_db(db)
+    data = []
+    for diary_list in diary_lists:
+        validated = DiaryListOut.model_validate(diary_list)
+        data.append(validated)
     result = {
         "code": 1,
         "message": "success",
