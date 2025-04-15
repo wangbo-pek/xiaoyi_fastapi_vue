@@ -15,8 +15,8 @@ router = APIRouter(prefix="/diary", tags=["日记管理"])
 
 @router.get("/list",
             response_model=ResponseModel[List[DiaryListOut]],
-            summary='获取所有文章列表',
-            description='无参数，获取数据库中所有NoteList'
+            summary='获取所有日记列表',
+            description='无参数，获取数据库中所有DiaryList'
             )
 async def get_diary_list(db: Session = Depends(get_db)):
     diary_lists = fetch_all_diary_list_from_db(db)

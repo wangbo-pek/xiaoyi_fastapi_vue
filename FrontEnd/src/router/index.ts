@@ -7,14 +7,14 @@ const router = createRouter({
         {
             path: '/',
             name: 'layout',
-            component: () => import('@/views/Layout.vue'),
+            component: () => import('@/views/blog/Layout.vue'),
             redirect: '/home',
             children: routesArray
         },
         {
             path: '/note/detail/:id',
             name: 'noteDetail',
-            component: () => import('@/views/NoteDetail.vue'),
+            component: () => import('@/views/blog/NoteDetail.vue'),
             meta: {
                 title: "笔记内容"
             }
@@ -22,7 +22,7 @@ const router = createRouter({
         {
             path: '/diary/detail/:id',
             name: 'diaryDetail',
-            component: () => import('@/views/DiaryDetail.vue'),
+            component: () => import('@/views/blog/DiaryDetail.vue'),
             meta: {
                 title: "日记内容"
             }
@@ -40,7 +40,7 @@ const router = createRouter({
         {
             path: '/about',
             name: 'about',
-            component: () => import('@/views/about/About.vue'),
+            component: () => import('@/views/blog/about/About.vue'),
             meta: {
                 title: "关于"
             }

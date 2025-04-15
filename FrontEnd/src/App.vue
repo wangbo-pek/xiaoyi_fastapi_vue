@@ -8,14 +8,16 @@
 
 <script setup lang='ts'>
     import {onMounted} from "vue";
-    import useNoteStore from "@/store/note.ts";
-    import useDiaryStore from "@/store/diary.ts";
-    import useSiteInformationStore from "@/store/site_info.ts";
-    import useAboutMeStore from "@/store/about_me.ts";
+    import useNoteStore from "@/store/blog/storages/note.ts";
+    import useDiaryStore from "@/store/blog/storages/diary.ts";
+    import useSiteInformationStore from "@/store/blog/storages/site_info.ts";
+    import useAboutMeStore from "@/store/blog/storages/about_me.ts";
     import axios_server from "./utils/axios_server.ts";
-    import type {MyAbilityAndMySkill, MyTask, MyFavoriteLink} from "@/store/types/about_me.ts";
+    import type {MyAbilityAndMySkill, MyTask, MyFavoriteLink} from "@/store/blog/types/about_me.ts";
     import dayjs from "dayjs";
-    import type {SiteSocialLink} from "@/store/types/site_info.ts";
+    import type {SiteSocialLink} from "@/store/blog/types/site_info.ts";
+    import type {NoteListItem} from "@/store/blog/types/note.ts";
+    import type {DiaryListItem} from "@/store/blog/types/diary.ts";
 
     defineOptions({
         name: 'App',
@@ -32,7 +34,7 @@
         axios_server.get('/api/note/list').then(
             (response) => {
                 noteStore.noteList = response.data
-                noteStore.noteList.forEach((value) => {
+                noteStore.noteList.forEach((value:NoteListItem) => {
                     value.createdTime = dayjs(value.createdTime).format('YYYY-MM-DD')
                     value.updatedTime = dayjs(value.updatedTime).format('YYYY-MM-DD')
                 })
@@ -43,7 +45,7 @@
         axios_server.get('/api/diary/list').then(
             (response) => {
                 diaryStore.diaryList = response.data
-                diaryStore.diaryList.forEach((value) => {
+                diaryStore.diaryList.forEach((value:DiaryListItem) => {
                     value.createdTime = dayjs(value.createdTime).format('YYYY-MM-DD')
                     value.updatedTime = dayjs(value.updatedTime).format('YYYY-MM-DD')
 
@@ -93,7 +95,7 @@
                 // 获取my_task
                 response.data.forEach((value: MyTask) => {
                     aboutMeStore.myTask.push(value)
-                    aboutMeStore.myTask.forEach((value) => {
+                    aboutMeStore.myTask.forEach((value: MyTask) => {
                         value.createdTime = dayjs(value.createdTime).format('YYYY-MM-DD')
                     })
                 })
