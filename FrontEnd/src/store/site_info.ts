@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import type {SiteInformation} from "@/store/types/site_info.ts";
+import type {SiteInformation, SiteSocialLink} from "@/store/types/site_info.ts";
 
 
 const useSiteInformationStore = defineStore('siteInformation', {
@@ -18,7 +18,14 @@ const useSiteInformationStore = defineStore('siteInformation', {
                 "createdTime": '',
                 "wechatSponsorQR": '',
                 "alipaySponsorQR": '',
-            } as SiteInformation
+            } as SiteInformation,
+            siteFooter:{
+                "blogArticleCount":0,
+                "blogWordCount":0,
+                "blogViewCount":0,
+                "blogExisted":0
+            },
+            siteSocialLinkList:[] as SiteSocialLink[]
         }
     }
 })

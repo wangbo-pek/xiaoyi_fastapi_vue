@@ -70,7 +70,7 @@
                         <span class="word_count-text">{{ noteStore.currentNote.wordCount }}字</span>
                     </span>
 
-                    <span class="reading-time">
+                <span class="reading-time">
                         <v-icon class="reading-time-icon" icon="mdi-clock-outline"></v-icon>
                         <span class="reading-time-text">{{ noteStore.currentNote.readingTime }}分钟</span>
                     </span>
@@ -132,23 +132,18 @@
                     <span class="tag" v-for="(tag, index) in noteStore.currentNote.tags"
                           :key="index">{{ tag.name }}</span>
                 </div>
-                <div class="share-icon">
-                    <v-img class="shaoshupai-icon" :src="shaoshupai.svgIconUrl"
-                           @click="jumpToSocialMedia(shaoshupai.name)"></v-img>
-                    <v-img class="github-icon" :src="github.svgIconUrl" @click="jumpToSocialMedia(github.name)"></v-img>
-                    <v-img class="weibo-icon" :src="weibo.svgIconUrl" @click="jumpToSocialMedia(weibo.name)"></v-img>
-                    <v-img class="douban-icon" :src="douban.svgIconUrl" @click="jumpToSocialMedia(douban.name)"></v-img>
-                    <v-img class="zhihu-icon" :src="zhihu.svgIconUrl" @click="jumpToSocialMedia(zhihu.name)"></v-img>
-                    <v-img class="twitter-icon" :src="twitter.svgIconUrl"
-                           @click="jumpToSocialMedia(twitter.name)"></v-img>
-                    <v-img class="facebook-icon" :src="facebook.svgIconUrl"
-                           @click="jumpToSocialMedia(facebook.name)"></v-img>
+                <div class="social-icon-container">
+                    <template v-for="item in siteInformationStore.siteSocialLinkList" :key="item.socialName">
+                        <v-img class="social-icon" :src="item.socialFaviconUrl"
+                               @click="jumpToSocialMedia(item)"></v-img>
+                    </template>
                 </div>
             </div>
 
             <div class="coffee-container" @click="showCoffeeDialog = true">
-                <span class="coffee-text">{{ coffeeMe.title }}</span>
-                <v-img class="coffee-icon" :src="coffeeMe.svgIconUrl"></v-img>
+                <span class="coffee-text">Coffee Me </span>
+                <v-img class="coffee-icon"
+                       :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/coffee.svg`"></v-img>
             </div>
         </div>
     </div>
@@ -162,12 +157,12 @@
             <v-card-text class="text-center">
                 <div style="display: flex; justify-content: center; gap: 20px;">
                     <v-img
-                        :src="coffeeMe.coffeeMeAlipayInfo"
+                        :src="siteInformationStore.siteInformation.alipaySponsorQR"
                         aspect-ratio="1"
                         max-width="40%"
                     />
                     <v-img
-                        :src="coffeeMe.coffeeMeWechatInfo"
+                        :src="siteInformationStore.siteInformation.wechatSponsorQR"
                         aspect-ratio="1"
                         max-width="40%"
                     />
@@ -185,6 +180,7 @@
 <script setup lang='ts'>
     import {useRoute} from "vue-router";
     import {nextTick, onMounted, onUnmounted, ref, watchEffect} from "vue";
+    import useSiteInformationStore from "@/store/site_info.ts";
     import useNoteStore from "@/store/note.ts";
     import {useRouter} from "vue-router";
     import axios_server from "@/utils/axios_server.ts";
@@ -194,8 +190,8 @@
     import MarkdownIt from 'markdown-it';
     import hljs from 'highlight.js'
     import 'highlight.js/styles/github.css'
-    import {twitter, facebook, github, douban, weibo, zhihu, shaoshupai} from '@/data/socialMedia.ts'
-    import {coffeeMe} from "@/data/personalDetail.ts";
+    import type {SiteSocialLink} from "@/store/types/site_info.ts";
+
 
     defineOptions({
         name: 'NoteDetail',
@@ -204,6 +200,7 @@
 
     const route = useRoute()
     const noteStore = useNoteStore()
+    const siteInformationStore = useSiteInformationStore()
     const noteListId = Number(route.params.id)
     const $router = useRouter()
 
@@ -226,7 +223,7 @@
     })
 
     // 保存默认的渲染方法（后面我们会用）
-    const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+    const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, self) {
         return self.renderToken(tokens, idx, options)
     }
 
@@ -326,28 +323,12 @@
         toc.value = tocHtml
     }
 
-    const jumpToSocialMedia = (name: string) => {
-        const urlMap: Record<string, string> = {
-            weibo: weibo.linkUrl,
-            douban: douban.linkUrl,
-            zhihu: zhihu.linkUrl,
-            twitter: twitter.linkUrl,
-            facebook: facebook.linkUrl,
-            github: github.linkUrl,
-        }
-
-        const url = urlMap[name]
-        if (url) {
-            window.open(url, '_blank')
-        } else {
-            console.log(`未知社交平台：${name}`)
-        }
+    const jumpToSocialMedia = (social: SiteSocialLink) => {
+        window.open(social.socialUrl, '_blank')
     }
 
     const backTo = () => {
-        $router.push({
-            name: 'note'
-        })
+        $router.back()
     }
 
     // 控制咖啡图片 dialog
@@ -357,10 +338,10 @@
         // 页面加载时，从后端获取文章content
         axios_server.get(`/api/note/${noteListId}`).then(
             (response) => {
-                const found = noteStore.noteList.find((value) => {
+                const currentNoteList = noteStore.noteList.find((value) => {
                     return value.noteListId == noteListId
                 })
-                Object.assign(noteStore.currentNote, found, response.data)
+                Object.assign(noteStore.currentNote, currentNoteList, response.data)
 
                 // 将markdown进行渲染
                 noteStore.currentNote.renderedMarkdown = md.render(noteStore.currentNote.markdownContent)
@@ -844,6 +825,7 @@
                 display: flex;
                 justify-content: space-evenly;
                 align-items: center;
+                padding: 20px 0 20px 0;
 
                 .tags {
                     width: 30%;
@@ -852,7 +834,7 @@
                     gap: 10px;
                     position: relative;
                     top: -20px;
-                    left: -120px;
+                    left: -30px;
 
                     .tag {
                         background-color: rgba(0, 75, 57);
@@ -864,54 +846,17 @@
                     }
                 }
 
-                .share-icon {
-                    width: 30%;
+                .social-icon-container {
+                    width: 55%;
                     display: flex;
                     justify-content: flex-end;
-                    padding: 15px;
                     position: relative;
                     top: -12px;
-                    left: 150px;
+                    left: 50px;
 
-                    .weibo-icon {
+                    .social-icon {
                         margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .douban-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .zhihu-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .twitter-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .facebook-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .github-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
-                        cursor: pointer;
-                    }
-
-                    .shaoshupai-icon {
-                        margin: 0 15px 15px 0;
-                        max-width: 10%;
+                        max-width: 5%;
                         cursor: pointer;
                     }
                 }

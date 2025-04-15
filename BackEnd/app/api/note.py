@@ -7,7 +7,6 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
 from app.deps.db import get_db
 from app.schema.note import NoteListOut, NoteOut
 from app.schema.response import ResponseModel
@@ -43,8 +42,8 @@ async def get_notes():
 
 @router.get("/{note_list_id}",
             response_model=ResponseModel[NoteOut],
-            summary='获取note_list_id的文章主体',
-            description='参数为note_list_id，int，获取数据库note_list_id所对应的文章主体'
+            summary='获取笔记内容',
+            description='参数为note_list_id(int)，根据id获取笔记内容'
             )
 async def get_note_by_notelist_id(note_list_id: int, db: Session = Depends(get_db)):
     note = fetch_note_from_db(db, note_list_id)

@@ -23,12 +23,13 @@ export interface DiaryContentItem {
     "title": string,
     "brief": string,
     "coverImg": string,
-    "isShow": boolean,
-    "viewedCount": number,
+    'tags': Tag[],
     "createdTime": string,
-    "modifiedTime": string,
+    "updatedTime": string,
+    "viewCount": number,
+    "readingTime": number,
+    "wordCount": number
     "markdownContent": string,
-    "htmlContent": string,
     "imageUrls": string[],
     "renderedMarkdown": string
 }

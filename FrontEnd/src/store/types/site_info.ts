@@ -13,3 +13,9 @@ export interface SiteInformation {
     "wechatSponsorQR": string,
     "alipaySponsorQR": string,
 }
+
+export interface SiteSocialLink {
+    'socialName': string,
+    'socialUrl': string,
+    'socialFaviconUrl': string
+}

@@ -46,7 +46,5 @@ export interface NoteContentItem {
     "imageUrls": string[],
     "renderedMarkdown": string,
     "tableOfContent": string
-
-    // "htmlContent": string,
 }
 

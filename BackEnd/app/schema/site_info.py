@@ -24,3 +24,13 @@ class SiteInfoOut(BaseModel):
     class Config:
         from_attributes = True
         validate_by_name = True
+
+
+class SiteSocialLinkOut(BaseModel):
+    name: str = Field(..., description='社交媒体名称', alias='socialName')
+    url: str = Field(..., description='社交媒体url', alias='socialUrl')
+    favicon_url: str = Field(..., description='社交媒体icon url', alias='socialFaviconUrl')
+
+    class Config:
+        from_attributes = True
+        validate_by_name = True

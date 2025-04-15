@@ -97,7 +97,7 @@
             transition: transform 0.3s ease;
 
             .diary-item {
-                max-width: 300px;
+                max-width: 400px;
                 border-radius: 5px;
                 padding: 20px;
                 margin-bottom: 50px;
@@ -140,7 +140,7 @@
                         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
                         backdrop-filter: blur(10px);
                         background-color: rgba(255, 255, 255, 0.3);
-                        filter: brightness(0.7) contrast(0.75) blur(0.5px) sepia(50%);
+                        filter: brightness(0.7) contrast(0.75) blur(1.5px) sepia(50%);
                     }
 
                     .cover:hover {

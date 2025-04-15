@@ -15,6 +15,7 @@
     import axios_server from "./utils/axios_server.ts";
     import type {MyAbilityAndMySkill, MyTask, MyFavoriteLink} from "@/store/types/about_me.ts";
     import dayjs from "dayjs";
+    import type {SiteSocialLink} from "@/store/types/site_info.ts";
 
     defineOptions({
         name: 'App',
@@ -30,7 +31,6 @@
         // 从后端获取所有的NoteList
         axios_server.get('/api/note/list').then(
             (response) => {
-                // Object.assign(noteStore.noteList, response.data)
                 noteStore.noteList = response.data
                 noteStore.noteList.forEach((value) => {
                     value.createdTime = dayjs(value.createdTime).format('YYYY-MM-DD')
@@ -57,7 +57,7 @@
         )
 
         // 从后端获取博客网站信息
-        axios_server.get('/api/site_config').then(
+        axios_server.get('/api/site_config/site_info').then(
             (response) => {
                 Object.assign(siteInformationStore.siteInformation, response.data)
                 siteInformationStore.siteInformation.createdTime = dayjs(siteInformationStore.siteInformation.createdTime).format('YYYY-MM-DD')
@@ -108,6 +108,14 @@
             }
         )
 
+        // 从后端获取social_info_link
+        axios_server.get('/api/site_config/site_social_info').then(
+            (response) => {
+                response.data.forEach((value: SiteSocialLink) => {
+                    siteInformationStore.siteSocialLinkList.push(value)
+                })
+            }
+        )
 
         const canvas = document.getElementById("stars") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;

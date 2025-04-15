@@ -6,7 +6,13 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models.site_info import SiteInfo
+from app.models.site_social_link import SiteSocialLink
 
 def fetch_site_info_from_db(db: Session) -> SiteInfo:
     stmt = select(SiteInfo)
     return db.execute(stmt).scalar_one_or_none()
+
+
+def fetch_site_social_info_from_db(db: Session) -> list[SiteSocialLink]:
+    stmt = select(SiteSocialLink)
+    return db.execute(stmt).scalars().all()

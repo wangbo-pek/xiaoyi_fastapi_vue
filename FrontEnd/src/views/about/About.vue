@@ -18,11 +18,18 @@
         </div>
         <div class="touch-me">
             <v-img class="wechat-icon"
-                   :src="'https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/wechat.svg'"></v-img>
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/wechat.svg`"
+                   @click="showWechatDialog = true">
+            </v-img>
             <v-img class="mail-icon"
-                   :src="'https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/gmail.svg'"></v-img>
-            <v-img class="twitter-icon"
-                   :src="'https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/twitter.svg'"></v-img>
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/gmail.svg`"
+                   @click="touchMe('mailMe')">
+            </v-img>
+            <v-img class="rss-icon"
+                   :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/rss.svg`"
+                   @click="touchMe('rssMe')">
+            </v-img>
+
         </div>
 
         <div class="my-ability-title">
@@ -102,10 +109,27 @@
         <Footer></Footer>
     </div>
 
+    <!-- 我的微信二维码 -->
+    <v-dialog v-model="showWechatDialog" width="500">
+        <v-card class="qr-card" color="#1e1e1e">
+            <v-card-title class="text-center text-white">微信扫一扫</v-card-title>
+            <v-card-text class="text-center">
+                <v-img
+                    :src="aboutMeStore.myDetail.wechatQR"
+                    aspect-ratio="1"
+                    contain
+                />
+            </v-card-text>
+            <v-card-actions class="justify-center">
+                <v-btn color="rgb(242, 204, 15)" @click="showWechatDialog = false">关闭</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup lang='ts'>
-    import {onMounted, onUnmounted, watch} from "vue";
+    import {onMounted, onUnmounted, ref, watch} from "vue";
     import useAboutMeStore from "@/store/about_me.ts";
     import useAppearanceStore from "@/store/appearance.ts";
     import useNoteStore from "@/store/note.ts";
@@ -125,6 +149,7 @@
     const noteStore = useNoteStore()
     const diaryStore = useDiaryStore()
     let allCover: string[] = []
+    const showWechatDialog = ref(false)  // 控制微信二维码 dialog
 
     onMounted(() => {
         appearanceStore.isShowHomeCover = false
@@ -212,16 +237,19 @@
             .wechat-icon {
                 margin: 0 20px 0 20px;
                 max-width: 2rem;
+                cursor: pointer;
             }
 
             .mail-icon {
                 margin: 0 20px 0 20px;
                 max-width: 2rem;
+                cursor: pointer;
             }
 
-            .twitter-icon {
+            .rss-icon {
                 margin: 0 20px 0 20px;
                 max-width: 2rem;
+                cursor: pointer;
             }
         }
 

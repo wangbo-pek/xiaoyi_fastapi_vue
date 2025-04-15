@@ -42,12 +42,15 @@
 
     <div class="divider3"></div>
 
+    <v-icon class="back-icon" icon="mdi-arrow-left" @click="backTo"></v-icon>
+
 </template>
 
 <script setup lang='ts'>
     import {useRoute} from "vue-router";
     import {onMounted, onUnmounted, ref, watchEffect} from "vue";
     import useDiaryStore from "@/store/diary.ts";
+    import {useRouter} from "vue-router";
     import axios_server from "@/utils/axios_server.ts";
     import HeaderNav from "@/components/header/HeaderNav.vue";
     import HeaderTitle from "@/components/header/HeaderTitle.vue";
@@ -64,6 +67,7 @@
     const route = useRoute()
     const diaryStore = useDiaryStore()
     const diaryListId = Number(route.params.id)
+    const $router = useRouter()
     const md = new MarkdownIt({html: true})
 
     let coverImageRef = ref<HTMLElement | null>(null)
@@ -83,17 +87,20 @@
         })
     }
 
-    onMounted(async () => {
+    onMounted(() => {
         // 页面加载时，从后端获取日记content
-        const result = await axios_server.get('getDiaryAllContent/', {
-            params: {
-                diaryListId
-            }
-        })
-        Object.assign(diaryStore.currentDiary, result.data)
+        axios_server.get(`/api/diary/${diaryListId}`).then(
+            (response) => {
+                const currentDiaryList = diaryStore.diaryList.find((value) => {
+                    return value.diaryListId == diaryListId
+                })
+                Object.assign(diaryStore.currentDiary, currentDiaryList, response.data)
 
-        // 将markdown进行渲染
-        diaryStore.currentDiary.renderedMarkdown = md.render(diaryStore.currentDiary.markdownContent)
+                // 将markdown进行渲染
+                diaryStore.currentDiary.renderedMarkdown = md.render(diaryStore.currentDiary.markdownContent)
+            }
+        )
+
         // 调用highlightCode处理代码高亮
         highlightCode()
 
@@ -115,6 +122,10 @@
             }, 100)
         }
     })
+
+    const backTo = () => {
+        $router.back()
+    }
 </script>
 
 <style scoped lang='scss'>
@@ -132,7 +143,7 @@
             align-items: stretch;
             height: 100%;
             width: 100%;
-            background-color: rgba(100, 100, 100, 0.5);
+            background-color: rgba(100, 100, 100, 0.1);
 
             .title-big {
                 width: 35%;
@@ -250,6 +261,15 @@
         height: 2px;
         background-color: #515c7a;;
         margin: 50px 0 100px 0;
+    }
+
+    .back-icon {
+        position: fixed;
+        top: 1rem;
+        left: 3rem;
+        color: white;
+        font-size: 2rem;
+        z-index: 3000;
     }
 
     @import "@/styles/markdown";

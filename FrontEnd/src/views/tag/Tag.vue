@@ -5,11 +5,11 @@
         </div>
         <div class="my-category-container">
             <div class="categories-chip">
-                <template v-for="item in categoriesStore.categoryStats" :key="item.category">
+                <template v-for="item in categoryStore.categoryList" :key="item.category">
                     <MyChip
-                        :name="item.category"
-                        :noteCount="item.note_count"
-                        :color="item.color"
+                        :name="item.name"
+                        :noteCount="item.categoryCount"
+                        :color="bgColor"
                     ></MyChip>
                 </template>
             </div>
@@ -23,10 +23,10 @@
         </div>
         <div class="my-tag-container">
             <div class="tags-chip">
-                <template v-for="item in tagsStore.tagStats" :key="item.tag">
+                <template v-for="item in tagStore.tagList" :key="item.tag">
                     <MyChip
-                        :name="item.tag"
-                        :noteCount="item.tag_count"
+                        :name="item.name"
+                        :noteCount="item.tagCount"
                         :color="item.color"
                     ></MyChip>
                 </template>
@@ -42,12 +42,14 @@
 <script setup lang='ts'>
     import {nextTick, onMounted, onUnmounted, ref} from "vue";
     import useAppearanceStore from "@/store/appearance.ts";
-    import useCategoriesStore from "@/store/categories.ts";
-    import useTagsStore from "@/store/tags.ts";
+    import useCategoryStore from "@/store/category.ts";
+    import useTagStore from "@/store/tag.ts";
     import axios_server from "@/utils/axios_server.ts";
     import * as echarts from 'echarts'
     import 'echarts-wordcloud'
     import MyChip from "@/components/MyChip.vue";
+    import type {TagWithCount} from "@/store/types/tag.ts";
+    import type {CategoryWithCount} from "@/store/types/category.ts";
 
     defineOptions({
         name: 'Tag',
@@ -55,19 +57,10 @@
     })
 
     let appearanceStore = useAppearanceStore()
-    let categoriesStore = useCategoriesStore()
-    let tagsStore = useTagsStore()
+    let categoryStore = useCategoryStore()
+    let tagStore = useTagStore()
 
-    const bgColor = [
-        'rgba(196,86,62,0.8)',
-        'rgba(125,150,46,0.8)',
-        'rgba(54,169,104,0.8)',
-        'rgba(59,110,161,0.8)',
-        'rgba(215,96,163,0.8)',
-        'rgba(150,96,215,0.8)',
-        'rgba(89,182,63,0.8)',
-        'rgba(206,191,93,0.8)',
-    ]
+    const bgColor = '#ffa500'
 
     const categoryChartRef = ref<HTMLDivElement | null>(null)
     let categoryChart: echarts.ECharts | null = null
@@ -77,11 +70,11 @@
     const initCategoryChart = () => {
         if (!categoryChartRef.value) return
 
-        const xData = categoriesStore.categoryStats.map(item => item.category)
-        const seriesData = categoriesStore.categoryStats.map((item) => ({
-            value: item.note_count,
+        const xData = categoryStore.categoryList.map((category:CategoryWithCount) => category.name)
+        const seriesData = categoryStore.categoryList.map((category:CategoryWithCount) => ({
+            value: category.categoryCount,
             itemStyle: {
-                color: item.color
+                color: bgColor
             }
         }))
 
@@ -106,9 +99,9 @@
     const initTagWordCloud = () => {
         if (!tagWordCloudRef.value) return
 
-        const data = tagsStore.tagStats.map((tag: any) => ({
-            name: tag.tag,
-            value: tag.tag_count,
+        const data = tagStore.tagList.map((tag: TagWithCount) => ({
+            name: tag.name,
+            value: tag.tagCount,
             textStyle: {
                 color: tag.color
             }
@@ -136,13 +129,10 @@
         appearanceStore.isShowHomeCover = false
         appearanceStore.isScrollOverViewport = true
 
-        axios_server.get('getAllCategoryCount/').then(
+        // 获取所有分类
+        axios_server.get('/api/tag_category/categories').then(
             async (response) => {
-                const categoriesRaw = response.data
-                categoriesStore.categoryStats = categoriesRaw.map((item: any, index: any) => ({
-                    ...item,
-                    color: bgColor[index % bgColor.length]
-                }))
+                categoryStore.categoryList = response.data
                 await nextTick()
                 initCategoryChart()
             }
@@ -150,19 +140,16 @@
             console.error('获取分类出错', err)
         })
 
-        axios_server.get('getAllTagCount/').then(
+        // 获取所有标签
+        axios_server.get('/api/tag_category/tags').then(
             async (response) => {
-                tagsStore.tagStats = response.data
-                tagsStore.tagStats.forEach((value) => {
-                    value.color = bgColor[Math.floor(Math.random() * 7)]
-                })
+                tagStore.tagList = response.data
                 await nextTick()
                 initTagWordCloud()
             }
         ).catch(err => {
             console.error('获取标签出错', err)
         })
-
     })
 
     onUnmounted(() => {
@@ -185,14 +172,16 @@
             text-align: left;
             color: white;
             font-size: 1.5rem;
+            font-weight: 800;
         }
 
         .my-category-container {
+            max-width: 85%;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             position: relative;
-            left: 12rem;
+            left: 7rem;
 
             .categories-chip {
                 position: relative;
@@ -206,18 +195,20 @@
         }
 
         .my-tag-title {
-            margin: 10px 0 30px 250px;
+            margin: 20px 0 30px 250px;
             text-align: left;
             color: white;
             font-size: 1.5rem;
+            font-weight: 800;
         }
 
         .my-tag-container {
+            max-width: 85%;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             position: relative;
-            left: 12rem;
+            left: 7rem;
 
             .tags-chip {
                 position: relative;

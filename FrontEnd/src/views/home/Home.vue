@@ -6,7 +6,7 @@
                 My Wisdom
             </div>
             <TypeWriter
-                :text="wang.myWisdom"
+                :text="aboutMeStore.myDetail.wisdom"
                 :typingSpeed="222"
             ></TypeWriter>
         </div>
@@ -51,18 +51,19 @@
 </template>
 
 <script setup lang='ts'>
+    import useAboutMeStore from "@/store/about_me.ts";
     import useNoteStore from "@/store/note.ts";
     import {useRouter} from "vue-router";
     import Card from "@/components/Card.vue";
     import {watch} from "vue";
     import TypeWriter from "@/components/TypeWriter.vue";
-    import {wang} from "@/data/personalDetail.ts";
 
     defineOptions({
         name: 'Home',
         inheritAttrs: false
     })
 
+    const aboutMeStore = useAboutMeStore()
     const noteStore = useNoteStore()
     const $router = useRouter()
 
@@ -78,7 +79,6 @@
     // 监听App.vue是否拿到了NoteList，如果拿到了，就获取被推荐的文章、最新的文章
     watch(() => noteStore.noteList, () => {
         // 获取被推荐的文章
-        console.log('@@@@@@')
         noteStore.recommendedNoteList = noteStore.noteList.filter((value) => {
             return value.isRecommended === true
         })

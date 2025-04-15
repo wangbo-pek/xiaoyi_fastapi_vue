@@ -30,7 +30,7 @@ const useNoteStore = defineStore('note', {
                 tableOfContent: ''
             } as NoteContentItem,
             recommendedNoteList: [] as NoteListItem[],
-            latestNoteList: [] as NoteListItem[]
+            latestNoteList: [] as NoteListItem[],
         }
     }
 })

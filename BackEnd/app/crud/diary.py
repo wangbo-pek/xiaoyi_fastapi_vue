@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models import Tag
 from app.models.diary import Diary
 from app.models.diary_list import DiaryList
-from app.schema.diary import DiaryCreate, DiaryListCreate, DiaryListOut
+from app.schema.diary import DiaryCreate, DiaryListCreate
 
 
 def create_diary_and_list(
@@ -77,4 +77,8 @@ def fetch_all_diary_list_from_db(db:Session) -> list[DiaryList]:
         diary_list.tags = valid_tags
     return list(diary_lists)
 
+
+def fetch_diary_from_db(db:Session, diary_list_id:int) -> Diary:
+    stmt = select(Diary).where(Diary.diary_list_id == diary_list_id)
+    return db.execute(stmt).scalar_one_or_none()
 

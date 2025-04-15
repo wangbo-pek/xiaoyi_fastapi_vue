@@ -7,23 +7,26 @@
 <script setup lang='ts'>
     import {watch, onMounted, ref} from "vue";
     import type {TypingWriter} from "@/store/types/writer.ts";
+    import useAboutMeStore from "@/store/about_me.ts";
 
     defineOptions({
         name: 'TypeWriter',
         inheritAttrs: false
     })
 
+    const aboutMeStore = useAboutMeStore()
     const props = defineProps<TypingWriter>()
     const displayedText = ref('')
     const isDeleting = ref(false)
     let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-    onMounted(() => {
+    watch(() => props.text, () => {
+        reset()
         startTyping()
     })
 
-    watch(() => props.text, () => {
-        reset()
+    // 监听App.aboutMeStore.myDetail，如果拿到了就开始typing
+    watch(() => aboutMeStore.myDetail.wisdom, () => {
         startTyping()
     })
 

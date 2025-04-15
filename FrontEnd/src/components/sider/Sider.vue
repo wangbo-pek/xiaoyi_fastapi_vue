@@ -14,8 +14,8 @@
                     {{ aboutMeStore.myDetail.shortIntro }}
                 </div>
             </div>
-
         </div>
+
         <div class="touch-me">
             <v-img class="wechat-icon"
                    :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/wechat.svg`"
@@ -31,7 +31,7 @@
             </v-img>
         </div>
         <div class="coffee-container" @click="showCoffeeDialog = true">
-            <span class="coffee-text">Coffee Me</span>
+            <span class="coffee-text">Coffee Me </span>
             <v-img class="coffee-icon" :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/coffee.svg`"></v-img>
         </div>
     </div>

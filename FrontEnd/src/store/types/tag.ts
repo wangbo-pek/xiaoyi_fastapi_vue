@@ -1,13 +1,14 @@
 export interface Tag {
-    name:string,
-    description:string,
-    color:string
+    name: string,
+    description: string,
+    color: string
 }
 
 
-export interface TagCount {
-    "tag": string,
-    "tag_count": string
-    "color":string
+export interface TagWithCount {
+    name: string,
+    description: string,
+    tagCount: string,
+    color: string
 }
 

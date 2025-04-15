@@ -12,25 +12,29 @@
             <div class="second-line">
                 <v-icon class="info-icon" icon="mdi-text-long"></v-icon>
                 <span class="info-text">站点总文章数：</span>
-                <span class="info-text strong-text">{{ article_count }}篇</span>
+                <span class="info-text strong-text">{{ siteInformationStore.siteFooter.blogArticleCount }}篇</span>
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <v-icon class="info-icon" icon="mdi-chart-areaspline"></v-icon>
                 <span class="info-text">站点总字数：</span>
-                <span class="info-text strong-text">写死的2字</span>
+                <span
+                    class="info-text strong-text">{{ Math.round(siteInformationStore.siteFooter.blogWordCount / 1000) }}k 字</span>
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <v-icon class="info-icon" icon="mdi-eye-outline"></v-icon>
                 <span class="info-text">总访问量：</span>
-                <span class="info-text strong-text">写死的2人</span>
+                <span class="info-text strong-text">%2%人</span>
                 <span class="info-text">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <v-icon class="info-icon" icon="mdi-cloud-outline"></v-icon>
                 <span class="info-text">本站已运行：</span>
-                <span class="info-text strong-text">{{ blog_duation }}天</span>
+                <span class="info-text strong-text">{{ siteInformationStore.siteFooter.blogExisted }}天</span>
             </div>
         </div>
         <div class="touch-me">
-            <v-img class="wechat-icon" :src="wechatMe.svgIconUrl" @click="showWechatDialog = true"></v-img>
-            <v-img class="mail-icon" :src="mailMe.svgIconUrl" @click="touchMe(mailMe.name)"></v-img>
-            <v-img class="rss-icon" :src="rssMe.svgIconUrl" @click="touchMe(rssMe.name)"></v-img>
+            <v-img class="wechat-icon" :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/wechat.svg`"
+                   @click="showWechatDialog = true"></v-img>
+            <v-img class="mail-icon" :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/gmail.svg`"
+                   @click="touchMe('mailMe')"></v-img>
+            <v-img class="rss-icon" :src="`https://xiaoyi-blog.oss-cn-beijing.aliyuncs.com/svg_icons/rss.svg`"
+                   @click="touchMe('rssMe')"></v-img>
         </div>
     </div>
 
@@ -40,7 +44,7 @@
             <v-card-title class="text-center text-white">微信扫一扫</v-card-title>
             <v-card-text class="text-center">
                 <v-img
-                    :src="wechatMe.wechatInfo"
+                    :src="aboutMeStore.myDetail.wechatQR"
                     aspect-ratio="1"
                     contain
                 />
@@ -54,11 +58,10 @@
 
 <script setup lang='ts'>
     import useSiteInformationStore from "@/store/site_info.ts";
+    import useAboutMeStore from "@/store/about_me.ts";
     import useNoteStore from "@/store/note.ts";
     import useDiaryStore from "@/store/diary.ts";
-    import useAboutMeStore from "@/store/about_me.ts";
-    import {mailMe, rssMe, wechatMe} from "@/data/personalDetail.ts";
-    import {ref} from "vue";
+    import {ref, watch} from "vue";
     import dayjs from "dayjs";
 
     defineOptions({
@@ -66,24 +69,32 @@
         inheritAttrs: false
     })
     const showWechatDialog = ref(false)
-    const aboutMeStore = useAboutMeStore()
-    const noteStore= useNoteStore()
-    const diaryStore= useDiaryStore()
-    const siteInformationStore = useSiteInformationStore()
+    let aboutMeStore = useAboutMeStore()
+    let siteInformationStore = useSiteInformationStore()
+    let noteStore = useNoteStore()
+    let diaryStore = useDiaryStore()
 
-    const article_count = noteStore.noteList.length + diaryStore.diaryList.length
-    const blog_duation = dayjs().diff(dayjs(siteInformationStore.siteInformation.createdTime), 'days')
 
     const touchMe = (name: string) => {
         const urlMap: Record<string, string> = {
-            mailMe: mailMe.linkUrl,
-            rssMe: rssMe.linkUrl
+            mailMe: 'mailto:wangbo.pek@gmail.com',
+            rssMe: ''
         }
         const url = urlMap[name]
         if (url) {
             window.open(url, '_blank')
         }
     }
+
+    watch([noteStore.noteList, diaryStore.diaryList, siteInformationStore.siteInformation], () => {
+        // 设置博客footer的数据
+        siteInformationStore.siteFooter.blogArticleCount = noteStore.noteList.length + diaryStore.diaryList.length
+        siteInformationStore.siteFooter.blogViewCount = 0
+        siteInformationStore.siteFooter.blogExisted = dayjs().diff(dayjs(siteInformationStore.siteInformation.createdTime), 'days')
+        noteStore.noteList.forEach((value) => {
+            siteInformationStore.siteFooter.blogWordCount += value.wordCount
+        })
+    })
 </script>
 
 <style scoped lang='scss'>

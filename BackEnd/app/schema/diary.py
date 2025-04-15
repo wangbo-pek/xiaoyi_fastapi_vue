@@ -40,3 +40,13 @@ class DiaryListOut(BaseModel):
     class Config:
         from_attributes = True
         validate_by_name = True
+
+
+class DiaryOut(BaseModel):
+    title: str = Field(..., description='日记标题')
+    content: str = Field(..., description='日记主体(markdown)', alias='markdownContent')
+    image_url: List[str] = Field(default=None, description='日记插图', alias='imageUrls')
+
+    class Config:
+        from_attributes = True
+        validate_by_name = True
