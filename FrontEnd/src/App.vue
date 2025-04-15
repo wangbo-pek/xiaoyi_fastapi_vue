@@ -29,6 +29,16 @@
     let siteInformationStore = useSiteInformationStore()
     let aboutMeStore = useAboutMeStore()
 
+    function getOrCreatedVisitorId():string {
+        const key = 'visitor_id'
+        let id =localStorage.getItem(key)
+        if(!id) {
+            id = crypto.randomUUID()
+            localStorage.setItem(key, id)
+        }
+        return id
+    }
+
     onMounted(() => {
         // 从后端获取所有的NoteList
         axios_server.get('/api/note/list').then(
@@ -109,13 +119,23 @@
                 })
             }
         )
-
         // 从后端获取social_info_link
         axios_server.get('/api/site_config/site_social_info').then(
             (response) => {
                 response.data.forEach((value: SiteSocialLink) => {
                     siteInformationStore.siteSocialLinkList.push(value)
                 })
+            }
+        )
+        // 将访客信息post到后端，insert到数据库
+        axios_server.post('/api/visitor/log', {
+            visitor_id:getOrCreatedVisitorId(),
+            path:window.location.pathname,
+            referer:document.referrer,
+            user_agent:navigator.userAgent
+        }).then(
+            (response) => {
+                console.log(response)
             }
         )
 

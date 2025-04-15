@@ -2,13 +2,13 @@
     path: xiaoyi/BackEnd/crud/diary.py
     description: 数据库中，日记Diary的增删改查
 """
-
-from sqlalchemy import select
+from fastapi import HTTPException
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session, joinedload
 from app.models import Tag
 from app.models.diary import Diary
 from app.models.diary_list import DiaryList
-from app.schema.diary import DiaryCreate, DiaryListCreate
+from app.schema.diary import DiaryCreate, DiaryListCreate, UpdateDiaryStatisticIn
 
 
 def create_diary_and_list(
@@ -82,3 +82,15 @@ def fetch_diary_from_db(db:Session, diary_list_id:int) -> Diary:
     stmt = select(Diary).where(Diary.diary_list_id == diary_list_id)
     return db.execute(stmt).scalar_one_or_none()
 
+
+def update_diary_statistic_from_db(db: Session, update_info: UpdateDiaryStatisticIn):
+    stmt = update(DiaryList).where(DiaryList.id == update_info.diaryListId)
+
+    if update_info.action == 'view':
+        stmt = stmt.values(view_count=DiaryList.view_count + 1)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid Action")
+
+    db.execute(stmt)
+    db.commit()
+    return {"result":"OK"}

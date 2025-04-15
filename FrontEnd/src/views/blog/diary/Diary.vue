@@ -51,6 +51,8 @@
     import useAppearanceStore from "@/store/blog/storages/appearance.ts";
     import useDiaryStore from "@/store/blog/storages/diary.ts";
     import {useRouter} from "vue-router";
+    import axios_server from "@/utils/axios_server.ts";
+    import type {DiaryListItem} from "@/store/blog/types/diary.ts";
 
     defineOptions({
         name: 'Diary',
@@ -67,6 +69,18 @@
             params: {
                 id: diaryListId
             }
+        }).then(() => {
+            axios_server.patch('/api/diary/update_diary_statistic', {
+                diaryListId,
+                action: 'view'
+            }).then(() => {
+                let diaryListIndex = -1
+                diaryStore.diaryList.find((value:DiaryListItem, index)=>{
+                    diaryListIndex = index
+                    return value.diaryListId == diaryListId
+                })
+                diaryStore.diaryList[diaryListIndex].viewCount += 1
+            })
         })
     }
 

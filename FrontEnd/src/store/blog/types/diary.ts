@@ -1,4 +1,4 @@
-import type {Tag} from "@/store/types/tag.ts";
+import type {Tag} from "@/store//blog/types/tag.ts";
 
 interface TimelineColor {
     pointColor: string,
@@ -13,6 +13,7 @@ export interface DiaryListItem {
     'tags': Tag[],
     "createdTime": string,
     "updatedTime": string,
+    "viewCount": number,
     "readingTime": number,
     "wordCount": number
     "timelineColor": TimelineColor,

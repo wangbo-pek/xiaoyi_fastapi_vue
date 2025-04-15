@@ -5,9 +5,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.crud.diary import fetch_all_diary_list_from_db, fetch_diary_from_db
+from app.crud.diary import fetch_all_diary_list_from_db, fetch_diary_from_db, update_diary_statistic_from_db
 from app.deps.db import get_db
-from app.schema.diary import DiaryListOut, DiaryOut
+from app.schema.diary import DiaryListOut, DiaryOut, UpdateDiaryStatisticIn, UpdateDiaryStatisticOut
 from app.schema.response import ResponseModel
 
 router = APIRouter(prefix="/diary", tags=["日记管理"])
@@ -66,3 +66,18 @@ async def update_diary():
 @router.delete("/")
 async def delete_diary():
     return None
+
+
+@router.patch("/update_diary_statistic",
+              response_model=ResponseModel[UpdateDiaryStatisticOut],
+              summary='更新diary的view_count',
+              description='根据参数id选择更新哪一篇Diary需要更新view_count'
+              )
+async def update_diary_statistic(update_info: UpdateDiaryStatisticIn, db:Session=Depends(get_db)):
+    data = update_diary_statistic_from_db(db, update_info)
+    data = UpdateDiaryStatisticOut.model_validate(data)
+    return {
+        "code": 1,
+        "message": "success",
+        "data": data
+    }

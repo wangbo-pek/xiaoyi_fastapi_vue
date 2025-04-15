@@ -50,3 +50,12 @@ class DiaryOut(BaseModel):
     class Config:
         from_attributes = True
         validate_by_name = True
+
+
+class UpdateDiaryStatisticIn(BaseModel):
+    diaryListId: int
+    action: str
+
+
+class UpdateDiaryStatisticOut(BaseModel):
+    result: str
