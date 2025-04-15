@@ -2,12 +2,13 @@
     path: xiaoyi/BackEnd/crud/note.py
     description: 数据库中，笔记Note的增删改查
 """
-from sqlalchemy import select
+from fastapi import HTTPException
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session, joinedload
 from app.models import Category, Tag
 from app.models.note import Note
 from app.models.note_list import NoteList
-from app.schema.note import NoteCreate, NoteListCreate
+from app.schema.note import NoteCreate, NoteListCreate, UpdateNoteStatisticIn, UpdateNoteStatisticOut
 
 
 def create_note_and_list(
@@ -91,6 +92,27 @@ def fetch_all_note_list_from_db(db: Session) -> list[NoteList]:
     return list(note_lists)
 
 
-def fetch_note_from_db(db:Session, note_list_id:int) -> Note:
+def fetch_note_from_db(db: Session, note_list_id: int) -> Note:
     stmt = select(Note).where(Note.note_list_id == note_list_id)
     return db.execute(stmt).scalar_one_or_none()
+
+
+def update_note_statistic_from_db(db: Session, update_info: UpdateNoteStatisticIn):
+    stmt = update(NoteList).where(NoteList.id == update_info.noteListId)
+
+    if update_info.action == 'like':
+        stmt = stmt.values(like_count=NoteList.like_count + 1)
+    elif update_info.action == 'dislike':
+        stmt = stmt.values(dislike_count=NoteList.dislike_count + 1)
+    elif update_info.action == 'undoLike':
+        stmt = stmt.values(like_count=NoteList.like_count - 1)
+    elif update_info.action == 'undoDislike':
+        stmt = stmt.values(dislike_count=NoteList.dislike_count - 1)
+    elif update_info.action == 'view':
+        stmt = stmt.values(view_count=NoteList.view_count + 1)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid Action")
+
+    db.execute(stmt)
+    db.commit()
+    return {"result":"OK"}

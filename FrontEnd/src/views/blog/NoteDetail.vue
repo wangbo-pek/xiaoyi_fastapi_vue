@@ -87,14 +87,55 @@
                 <div v-html="toc"></div>
             </div>
 
-            <div class="like-or-dislike">
-                <div class="whether-praised">
-                    <span class="whether-praised-text">Is This Article Can Be Praised？</span>
-                </div>
-                <div class="praised-or-dispraised-icon">
-                    <v-icon class="praised-icon" icon="mdi-heart-outline"></v-icon>
-                    <v-icon class="dispraised-icon" icon="mdi-heart-off-outline"></v-icon>
-                </div>
+            <div class="like-dislike-container">
+                <template v-if="likeStatus==='liked'">
+                    <div class="like-dislike">
+                        <span class="liked-text">Thanks a lot for your kind encouragement! </span>
+                    </div>
+                    <div class="like-dislike-icon">
+                        <v-icon class="liked-icon"
+                                icon="mdi-heart"
+                                @click="updateNoteStatistic('undoLike')"
+                        ></v-icon>
+                        <v-icon class="dislike-icon"
+                                icon="mdi-heart-off-outline"
+                                @click="updateNoteStatistic('undoLike')"
+                        ></v-icon>
+                    </div>
+                </template>
+
+                <template v-else-if="likeStatus==='disliked'">
+                    <div class="like-dislike">
+                        <span class="disliked-text">Copied that. It means a lot to me, thank you! </span>
+                    </div>
+                    <div class="like-dislike-icon">
+                        <v-icon class="like-icon"
+                                icon="mdi-heart"
+                                @click="updateNoteStatistic('undoDislike')"
+                        ></v-icon>
+                        <v-icon class="disliked-icon"
+                                icon="mdi-heart-off"
+                                @click="updateNoteStatistic('undoDislike')"
+                        ></v-icon>
+                    </div>
+                </template>
+
+                <template v-else-if="likeStatus==='default'">
+                    <div class="like-dislike">
+                        <span class="like-dislike-text">Can this article be praised? </span>
+                    </div>
+                    <div class="like-dislike-icon">
+                        <v-icon class="like-icon"
+                                icon="mdi-heart-outline"
+                                @click="updateNoteStatistic('like')"
+                        ></v-icon>
+                        <v-icon class="dislike-icon"
+                                icon="mdi-heart-off-outline"
+                                @click="updateNoteStatistic('dislike')"
+                        ></v-icon>
+                    </div>
+                </template>
+
             </div>
 
             <div class="divider2"></div>
@@ -143,8 +184,7 @@
         </div>
     </div>
 
-    <div class="recommend-note-container">
-    </div>
+    <div class="recommend-note-container"></div>
 
     <v-dialog v-model="showCoffeeDialog" width="800">
         <v-card class="qr-card" color="#1e1e1e">
@@ -217,11 +257,6 @@
         linkify: true, // 识别纯链接如 https://xxx.com
         typographer: true // 美化排版符号，如引号等
     })
-
-    // // 保存默认的渲染方法（后面我们会用）
-    // const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, self) {
-    //     return self.renderToken(tokens, idx, options)
-    // }
 
     // 重写 link_open 渲染逻辑，添加 target 和 rel
     md.renderer.rules.link_open = (tokens, idx, options, env, renderer) => {
@@ -330,11 +365,59 @@
     // 控制咖啡图片 dialog
     const showCoffeeDialog = ref(false)
 
+    // 控制like-icon、dislike-icon的状态
+    let likeStatus = ref<'liked' | 'disliked' | 'default'>('default')
+    const updateNoteStatistic = (action: string) => {
+        // 在store中获取当前noteListId的noteList的索引，用于更新like_count和dislike_count
+        let noteListIndex = -1
+        noteStore.noteList.find((value: NoteListItem, index) => {
+            noteListIndex = index
+            return value.noteListId == noteListId
+        })
+        if (action === 'like') {  // likeStatus是default时，点击了like-icon
+            axios_server.patch('/api/note/update_note_statistic', {
+                noteListId,
+                action
+            }).then(() => {
+                likeStatus.value = 'liked'
+                noteStore.currentNote.likeCount += 1
+                noteStore.noteList[noteListIndex].likeCount += 1
+            })
+        } else if (action === 'dislike') {  // likeStatus是default时，点击了dislike-icon
+            axios_server.patch('/api/note/update_note_statistic', {
+                noteListId,
+                action
+            }).then(() => {
+                likeStatus.value = 'disliked'
+                noteStore.currentNote.dislikeCount += 1
+                noteStore.noteList[noteListIndex].dislikeCount += 1
+            })
+        } else if (action === 'undoLike') {  // likeStatus是liked时，点击了like-icon或dislike-icon
+            axios_server.patch('/api/note/update_note_statistic', {
+                noteListId,
+                action
+            }).then(() => {
+                likeStatus.value = 'default'
+                noteStore.currentNote.likeCount -= 1
+                noteStore.noteList[noteListIndex].likeCount -= 1
+            })
+        } else if (action === 'undoDislike') {  // likeStatus是disliked时，点击了like-icon或dislike-icon
+            axios_server.patch('/api/note/update_note_statistic', {
+                noteListId,
+                action
+            }).then(()=>{
+                likeStatus.value = 'default'
+                noteStore.currentNote.dislikeCount -= 1
+                noteStore.noteList[noteListIndex].dislikeCount -= 1
+            })
+        }
+    }
+
     onMounted(async () => {
         // 页面加载时，从后端获取文章content
         axios_server.get(`/api/note/${noteListId}`).then(
             (response) => {
-                const currentNoteList = noteStore.noteList.find((value:NoteListItem) => {
+                const currentNoteList = noteStore.noteList.find((value: NoteListItem) => {
                     return value.noteListId == noteListId
                 })
                 Object.assign(noteStore.currentNote, currentNoteList, response.data)
@@ -491,7 +574,7 @@
     .coverImage {
         width: 85%;
         height: 65vh;
-        margin:0 auto;
+        margin: 0 auto;
         background-size: cover;
         background-position: top center;
         background-repeat: no-repeat;
@@ -640,6 +723,7 @@
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
+
                 }
 
                 .dislike {
@@ -656,6 +740,7 @@
                         color: rgb(20, 200, 150);
                         font-size: 1rem;
                     }
+
                 }
 
                 .word_count {
@@ -710,32 +795,52 @@
                 }
             }
 
-            .like-or-dislike {
+            .like-dislike-container {
                 display: flex;
                 flex-direction: column;
 
-                .whether-praised {
+                .like-dislike {
                     margin: 5px auto 5px auto;
 
-                    .whether-praised-text {
+                    .like-dislike-text {
+                        color: white;
+                    }
+
+                    .liked-text {
+                        color: white;
+                    }
+
+                    .disliked-text {
                         color: white;
                     }
                 }
 
-                .praised-or-dispraised-icon {
+                .like-dislike-icon {
                     display: flex;
                     margin: 5px auto 5px auto;
                     gap: 20px;
 
-                    .praised-icon {
+                    .like-icon {
                         cursor: pointer;
                         color: white;
                         font-size: 1.3rem;
                     }
 
-                    .dispraised-icon {
+                    .liked-icon {
+                        cursor: pointer;
+                        color: red;
+                        font-size: 1.3rem;
+                    }
+
+                    .dislike-icon {
                         cursor: pointer;
                         color: white;
+                        font-size: 1.3rem;
+                    }
+
+                    .disliked-icon {
+                        cursor: pointer;
+                        color: red;
                         font-size: 1.3rem;
                     }
                 }

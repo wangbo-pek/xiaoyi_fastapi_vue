@@ -22,7 +22,7 @@ class NoteListCreate(BaseModel):
     category: str = Field(..., description="分类名称")
     tags: List[str] = Field(default_factory=list, description="标签列表")
     reading_time: int = Field(..., description='阅读时间')
-    word_count:int = Field(..., description='字数')
+    word_count: int = Field(..., description='字数')
 
 
 class NoteListOut(BaseModel):
@@ -53,10 +53,19 @@ class NoteListOut(BaseModel):
 
 
 class NoteOut(BaseModel):
-    title:str = Field(..., description='文章标题')
-    content:str = Field(..., description='文章主体(markdown)', alias='markdownContent')
-    image_url:List[str] = Field(default=None, description='文章插图', alias='imageUrls')
+    title: str = Field(..., description='文章标题')
+    content: str = Field(..., description='文章主体(markdown)', alias='markdownContent')
+    image_url: List[str] = Field(default=None, description='文章插图', alias='imageUrls')
 
     class Config:
         from_attributes = True
         validate_by_name = True
+
+
+class UpdateNoteStatisticIn(BaseModel):
+    noteListId: int
+    action: str
+
+
+class UpdateNoteStatisticOut(BaseModel):
+    result: str

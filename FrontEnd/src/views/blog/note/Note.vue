@@ -117,6 +117,7 @@
     import useAppearanceStore from "@/store/blog/storages/appearance.ts";
     import Card from "@/components/blog/Card.vue";
     import type {NoteListItem} from "@/store/blog/types/note.ts";
+    import axios_server from "@/utils/axios_server.ts";
 
     defineOptions({
         name: 'Note',
@@ -132,7 +133,7 @@
     const currentDetail = ref<any>(null)
 
     const openDialog = (noteListId: number) => {
-        const found = noteStore.noteList.find((item:NoteListItem) => item.noteListId === noteListId)
+        const found = noteStore.noteList.find((item: NoteListItem) => item.noteListId === noteListId)
         if (found) {
             currentDetail.value = found
             showDialog.value = true
@@ -150,6 +151,18 @@
             params: {
                 id: noteListId
             }
+        }).then(() => {
+            axios_server.patch('/api/note/update_note_statistic', {
+                noteListId,
+                action: 'view'
+            }).then(() => {
+                let noteListIndex = -1
+                noteStore.noteList.find((value:NoteListItem, index)=>{
+                    noteListIndex = index
+                    return value.noteListId == noteListId
+                })
+                noteStore.noteList[noteListIndex].viewCount += 1
+            })
         })
     }
 
