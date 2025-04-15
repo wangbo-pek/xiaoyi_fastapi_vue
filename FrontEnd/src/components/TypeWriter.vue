@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang='ts'>
-    import {watch, onMounted, ref} from "vue";
+    import {watch, ref} from "vue";
     import type {TypingWriter} from "@/store/types/writer.ts";
     import useAboutMeStore from "@/store/about_me.ts";
 
@@ -16,7 +16,7 @@
 
     const aboutMeStore = useAboutMeStore()
     const props = defineProps<TypingWriter>()
-    const displayedText = ref('')
+    const displayedText = ref('“人的一生就应该像一条河，开始是涓涓细流，被狭窄的河岸所束缚，然后，它激烈地奔过巨石，冲越瀑布。渐渐地，河流变宽了，两边的堤岸也远去，河水流动得更加平静。最后，它自然地融入了大海，并毫无痛苦地消失了自我。” —— 伯特兰·罗素')
     const isDeleting = ref(false)
     let timeoutId: ReturnType<typeof setTimeout> | null = null
 

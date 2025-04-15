@@ -46,11 +46,6 @@
                     <span class="created-date-text">{{ noteStore.currentNote.createdTime }}</span>
                 </span>
 
-                <span class="updated-date">
-                    <v-icon class="updated-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
-                    <span class="updated-date-text">{{ noteStore.currentNote.updatedTime }}</span>
-                </span>
-
                 <span class="view">
                     <v-icon class="view-icon" icon="mdi-eye-outline"></v-icon>
                     <span class="view-text">{{ noteStore.currentNote.viewCount }}</span>
@@ -222,13 +217,13 @@
         typographer: true // 美化排版符号，如引号等
     })
 
-    // 保存默认的渲染方法（后面我们会用）
-    const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, self) {
-        return self.renderToken(tokens, idx, options)
-    }
+    // // 保存默认的渲染方法（后面我们会用）
+    // const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, self) {
+    //     return self.renderToken(tokens, idx, options)
+    // }
 
     // 重写 link_open 渲染逻辑，添加 target 和 rel
-    md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+    md.renderer.rules.link_open = (tokens, idx, options, env, renderer) => {
         const token = tokens[idx]
 
         // 如果没有 target="_blank"，就添加
@@ -247,7 +242,7 @@
             token.attrs![relIndex][1] = 'noopener noreferrer'
         }
 
-        return defaultRender(tokens, idx, options, env, self)
+        return renderer.renderToken(tokens, idx, options)
     }
 
     // 前端展示table of contents的内容
@@ -499,7 +494,7 @@
         background-position: top center;
         background-repeat: no-repeat;
         background-position-x: 10%;
-        background-position-y: 50%;
+        background-position-y: 70%;
         filter: brightness(0.5);
     }
 

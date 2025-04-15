@@ -23,9 +23,15 @@
 
     <div class="content-container">
         <div class="diary-background">
-            <div class="diary-created-time">
+            <div class="create-time-and-tags">
                 <v-icon class="created-date-icon" icon="mdi-calendar-sync-outline"></v-icon>
                 <span class="created-date-text">{{ diaryStore.currentDiary.createdTime }}</span>
+                <span class="tag" v-for="(tag, index) in diaryStore.currentDiary.tags" :key="index">
+                    #{{ tag.name }}
+                </span>
+            </div>
+
+            <div class="tags-container">
             </div>
 
             <div class="body-container">
@@ -175,20 +181,21 @@
         background-position: top center;
         background-repeat: no-repeat;
         background-position-x: 10%;
-        background-position-y: 50%;
+        background-position-y: 80%;
         filter: brightness(0.5);
     }
 
     .title-container {
         .diary-title {
-            padding: 5px 15px 5px 200px;
-            border-radius: 3px 6px 9px 12px;
-            position: relative;
-            top: -3rem;
-            left: 20rem;
-            font-size: 1.5rem;
-            background-color: rgba(14, 44, 51, 0.75);
-            color: #cccccc;
+            width: 100%;
+            padding: 20px 200px 5px 200px;
+            border-radius: 10px 10px 2px 0;
+            position: absolute;
+            top: 20.2rem;
+            font-size: 4rem;
+            background-color: rgba(0, 75, 57, 0.5);
+            color: #ffffff;
+            text-align: center;
         }
     }
 
@@ -201,21 +208,27 @@
             padding: 50px 80px 20px 80px;
             width: 75%;
             position: relative;
-            top: -3em;
+            top: -2em;
 
-            .diary-created-time {
+            .create-time-and-tags {
                 display: flex;
                 align-items: center;
                 gap: 10px;
 
                 .created-date-icon {
-                    color: #8ab9a8;
-                    font-size: 1.3rem;
+                    color: #d6faec;
+                    font-size: 1.1rem;
                 }
 
                 .created-date-text {
-                    color: #8ab9a8;
-                    font-size: 1.3rem;
+                    color: #d6faec;
+                    font-size: 1.1rem;
+                }
+
+                .tag{
+                    margin-left: 20px;
+                    color: #d6faec;
+                    font-size: 1.1rem;
                 }
             }
 
@@ -231,8 +244,6 @@
                 }
             }
         }
-
-
     }
 
     .coffee-container {
