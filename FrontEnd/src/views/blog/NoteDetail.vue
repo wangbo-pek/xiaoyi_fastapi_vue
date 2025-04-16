@@ -259,7 +259,7 @@
     })
 
     // 重写 link_open 渲染逻辑，添加 target 和 rel
-    md.renderer.rules.link_open = (tokens, idx, options, env, renderer) => {
+    md.renderer.rules.link_open = (tokens, idx, options, renderer) => {
         const token = tokens[idx]
 
         // 如果没有 target="_blank"，就添加

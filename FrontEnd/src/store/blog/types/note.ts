@@ -1,5 +1,5 @@
-import type {Tag} from "@/store/types/tag.ts"
-import type {Category} from "@/store/types/category.ts"
+import type {Tag} from "@/store/blog/types/tag.ts"
+import type {Category} from "@/store/blog/types/category.ts"
 
 
 export interface NoteListItem {
