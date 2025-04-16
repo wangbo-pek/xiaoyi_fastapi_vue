@@ -5,8 +5,7 @@
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
-
-from app.schema.tag_category import TagOut, CategoryOut
+from BackEnd.app.schema.tag_category import TagOut, CategoryOut
 
 
 class NoteCreate(BaseModel):

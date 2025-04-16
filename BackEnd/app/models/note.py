@@ -6,10 +6,10 @@
 from typing import List, Optional, TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Text, JSON, ForeignKey
-from app.core.database import Base
+from BackEnd.app.core.database import Base
 
 if TYPE_CHECKING:
-    from app.models.note_list import NoteList
+    from BackEnd.app.models.note_list import NoteList
 
 class Note(Base):
     __tablename__ = 'note'

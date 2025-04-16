@@ -4,7 +4,7 @@
 """
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models.about_me import MyDetail, MyAbility, MySkill, MyTask, MyFavoriteLink
+from BackEnd.app.models import MyDetail, MyAbility, MySkill, MyTask, MyFavoriteLink
 
 def fetch_detail_from_db(db:Session) -> MyDetail:
     stmt = select(MyDetail)

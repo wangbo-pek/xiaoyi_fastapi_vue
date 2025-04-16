@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from app.api import api_router
+from BackEnd.app.api import api_router
 from starlette.middleware.cors import CORSMiddleware
+from BackEnd.app.core.config import get_settings
 
 app = FastAPI(
     title="Deep Think",
@@ -14,6 +15,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+settings = get_settings()
 
 app.add_middleware(
     CORSMiddleware,

@@ -5,10 +5,8 @@
 from fastapi import HTTPException
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session, joinedload
-from app.models import Category, Tag
-from app.models.note import Note
-from app.models.note_list import NoteList
-from app.schema.note import NoteCreate, NoteListCreate, UpdateNoteStatisticIn, UpdateNoteStatisticOut
+from BackEnd.app.models import Category, Tag,NoteList, Note
+from BackEnd.app.schema.note import NoteCreate, NoteListCreate, UpdateNoteStatisticIn, UpdateNoteStatisticOut
 
 
 def create_note_and_list(

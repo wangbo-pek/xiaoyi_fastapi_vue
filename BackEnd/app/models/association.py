@@ -4,7 +4,7 @@
 """
 
 from sqlalchemy import Column, Table, ForeignKey
-from app.core.database import Base
+from BackEnd.app.core.database import Base
 
 
 # note_list和tag的中间表

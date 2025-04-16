@@ -7,13 +7,13 @@ from datetime import datetime
 from typing import List, TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, Boolean, Integer, ForeignKey
-from app.core.database import Base
-from app.models.association import note_tag
+from BackEnd.app.core.database import Base
+from BackEnd.app.models.association import note_tag
 
 if TYPE_CHECKING:
-    from app.models.note import Note
-    from app.models.category import Category
-    from app.models.tag import Tag
+    from BackEnd.app.models.note import Note
+    from BackEnd.app.models.category import Category
+    from BackEnd.app.models.tag import Tag
 
 
 class NoteList(Base):

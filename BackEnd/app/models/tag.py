@@ -7,8 +7,8 @@ from datetime import datetime
 from typing import Optional, List, TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, Boolean
-from app.core.database import Base
-from app.models.association import note_tag, diary_tag
+from BackEnd.app.core.database import Base
+from BackEnd.app.models.association import note_tag, diary_tag
 
 if TYPE_CHECKING:
     from app.models.diary_list import DiaryList

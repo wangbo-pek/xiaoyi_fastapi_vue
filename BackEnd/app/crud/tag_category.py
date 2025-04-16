@@ -5,13 +5,8 @@
 
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
-
-from app.models import note_tag
-from app.models.association import diary_tag
-from app.models.tag import Tag
-from app.models.category import Category
-from app.models.note_list import NoteList
-from app.models.diary_list import DiaryList
+from BackEnd.app.models import note_tag,Tag,Category,DiaryList
+from BackEnd.app.models.association import diary_tag
 
 
 def fetch_tags_with_count_from_db(db: Session) -> list[Tag]:

@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div class="header-container">
         <div class="header" :class="{'change-bgcolor':isScrollOverViewport}">
             <div class="title-big">
@@ -259,9 +259,9 @@
     })
 
     // 重写 link_open 渲染逻辑，添加 target 和 rel
-    md.renderer.rules.link_open = (tokens, idx, options, renderer) => {
+    md.renderer.rules.link_open = (tokens, idx, options, env, renderer) => {
         const token = tokens[idx]
-
+        console.log(env)
         // 如果没有 target="_blank"，就添加
         const targetIndex = token.attrIndex('target')
         if (targetIndex < 0) {

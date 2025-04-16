@@ -1,5 +1,5 @@
-from app.core.database import Base, engine
-from app import models
+from BackEnd.app.core.database import Base, engine
+from BackEnd.app import models
 
 def init_db():
     print('正在初始化数据库')

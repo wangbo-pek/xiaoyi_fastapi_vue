@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import VisitorLog
-from app.schema.visitor import VisitorLogCreate
+from BackEnd.app.models import VisitorLog
+from BackEnd.app.schema.visitor import VisitorLogCreate
 
 
 def insert_visitor_log_to_db(db: Session, log_info: VisitorLogCreate, ip: str) -> VisitorLog|None:

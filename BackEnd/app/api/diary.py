@@ -5,10 +5,10 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.crud.diary import fetch_all_diary_list_from_db, fetch_diary_from_db, update_diary_statistic_from_db
-from app.deps.db import get_db
-from app.schema.diary import DiaryListOut, DiaryOut, UpdateDiaryStatisticIn, UpdateDiaryStatisticOut
-from app.schema.response import ResponseModel
+from BackEnd.app.crud.diary import fetch_all_diary_list_from_db, fetch_diary_from_db, update_diary_statistic_from_db
+from BackEnd.app.deps.db import get_db
+from BackEnd.app.schema.diary import DiaryListOut, DiaryOut, UpdateDiaryStatisticIn, UpdateDiaryStatisticOut
+from BackEnd.app.schema.response import ResponseModel
 
 router = APIRouter(prefix="/diary", tags=["日记管理"])
 

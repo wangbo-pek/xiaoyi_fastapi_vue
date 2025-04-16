@@ -5,10 +5,10 @@
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.crud.about_me import *
-from app.deps.db import get_db
-from app.schema.response import ResponseModel
-from app.schema.about_me import *
+from BackEnd.app.crud.about_me import *
+from BackEnd.app.deps.db import get_db
+from BackEnd.app.schema.response import ResponseModel
+from BackEnd.app.schema.about_me import *
 
 
 router = APIRouter(prefix="/about_me", tags=["博客网站我的信息"])

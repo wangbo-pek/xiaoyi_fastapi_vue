@@ -229,8 +229,8 @@
                 border-radius: 10px;
                 padding: 35px;
                 position: relative;
-                bottom: 17rem;
-                left: 5.5rem;
+                bottom: 18rem;
+                left: 5.9rem;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
                 .tags-category-container {

@@ -4,12 +4,12 @@
 """
 from starlette.requests import Request
 
-from app.crud.visitor import insert_visitor_log_to_db
-from app.schema.visitor import VisitorLogOut, VisitorLogCreate
-from fastapi import APIRouter, Depends, HTTPException
+from BackEnd.app.crud.visitor import insert_visitor_log_to_db
+from BackEnd.app.schema.visitor import VisitorLogOut, VisitorLogCreate
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.deps.db import get_db
-from app.schema.response import ResponseModel
+from BackEnd.app.deps.db import get_db
+from BackEnd.app.schema.response import ResponseModel
 
 router = APIRouter(prefix="/visitor", tags=["访客统计管理"])
 

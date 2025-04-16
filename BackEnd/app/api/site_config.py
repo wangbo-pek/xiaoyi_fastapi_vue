@@ -7,11 +7,10 @@ from typing import List
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
-from app.deps.db import get_db
-from app.schema.site_info import SiteInfoOut, SiteSocialLinkOut
-from app.schema.response import ResponseModel
-from app.crud.site_config import fetch_site_info_from_db, fetch_site_social_info_from_db
+from BackEnd.app.deps.db import get_db
+from BackEnd.app.schema.site_info import SiteInfoOut, SiteSocialLinkOut
+from BackEnd.app.schema.response import ResponseModel
+from BackEnd.app.crud.site_config import fetch_site_info_from_db, fetch_site_social_info_from_db
 
 router = APIRouter(prefix="/site_config", tags=["网站设置管理"])
 
