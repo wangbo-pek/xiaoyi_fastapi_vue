@@ -3,9 +3,9 @@ from app.api import api_router
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="XiaoYi_Blog",
-    description="博客",
-    version="1.0",
+    title="Deep Think",
+    description="深邃思考",
+    version="1.0.0",
     contact={
         "name": "wang",
         "url": "https://wang.com",
@@ -18,7 +18,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # ✅ 明确 origin
+        "http://localhost:5173",
         "http://127.0.0.1:5173"
     ],
     allow_credentials=True,
