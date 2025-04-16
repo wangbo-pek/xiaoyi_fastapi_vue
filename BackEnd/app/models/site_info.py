@@ -6,7 +6,7 @@
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
-from BackEnd.app.core.database import Base
+from app.core.database import Base
 
 class SiteInfo(Base):
     __tablename__ = "site_info"

@@ -6,7 +6,7 @@
 from datetime import datetime
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from BackEnd.app.core.database import Base
+from app.core.database import Base
 
 
 class VisitorLog(Base):

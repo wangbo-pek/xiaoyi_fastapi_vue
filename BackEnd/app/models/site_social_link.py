@@ -5,7 +5,7 @@
 
 from sqlalchemy import String, Integer
 from sqlalchemy.orm import Mapped, mapped_column
-from BackEnd.app.core.database import Base
+from app.core.database import Base
 
 
 class SiteSocialLink(Base):

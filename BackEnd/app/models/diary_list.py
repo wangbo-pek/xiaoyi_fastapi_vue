@@ -7,12 +7,12 @@ from datetime import datetime
 from typing import List, TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, Boolean, Integer
-from BackEnd.app.core.database import Base
-from BackEnd.app.models.association import diary_tag
+from app.core.database import Base
+from app.models.association import diary_tag
 
 if TYPE_CHECKING:
-    from app.models.tag import Tag
-    from app.models.diary import Diary
+    from app.models import Tag, Diary
+
 
 class DiaryList(Base):
     __tablename__ = 'diary_list'
@@ -37,7 +37,7 @@ class DiaryList(Base):
     word_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False, comment='字数')
 
     # DiaryList n:n Tag
-    tags:Mapped[List["Tag"]] = relationship(
+    tags: Mapped[List["Tag"]] = relationship(
         secondary=diary_tag,
         back_populates='diaries_list'
     )

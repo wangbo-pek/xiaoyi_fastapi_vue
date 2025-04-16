@@ -4,12 +4,12 @@
 """
 import re
 from pathlib import Path
-from BackEnd.app.utils.oss_upload import upload_to_oss
-from BackEnd.app.crud.diary import create_diary_and_list
-from BackEnd.app.crud.note import create_note_and_list
-from BackEnd.app.schema.note import NoteCreate, NoteListCreate
-from BackEnd.app.schema.diary import DiaryCreate, DiaryListCreate
-from BackEnd.app.core.database import SessionLocal
+from app.utils.oss_upload import upload_to_oss
+from app.crud.diary import create_diary_and_list
+from app.crud.note import create_note_and_list
+from app.schema.note import NoteCreate, NoteListCreate
+from app.schema.diary import DiaryCreate, DiaryListCreate
+from app.core.database import SessionLocal
 
 
 # 用于提取markdown中的纯文本摘要

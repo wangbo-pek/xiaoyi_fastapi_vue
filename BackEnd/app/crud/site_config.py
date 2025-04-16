@@ -5,7 +5,7 @@
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from BackEnd.app.models import SiteInfo, SiteSocialLink
+from app.models import SiteInfo, SiteSocialLink
 
 
 def fetch_site_info_from_db(db: Session) -> SiteInfo:

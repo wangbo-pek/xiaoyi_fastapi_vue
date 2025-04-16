@@ -7,10 +7,10 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from BackEnd.app.deps.db import get_db
-from BackEnd.app.schema.note import NoteListOut, NoteOut, UpdateNoteStatisticIn, UpdateNoteStatisticOut
-from BackEnd.app.schema.response import ResponseModel
-from BackEnd.app.crud.note import fetch_all_note_list_from_db, fetch_note_from_db, update_note_statistic_from_db
+from app.deps.db import get_db
+from app.schema.note import NoteListOut, NoteOut, UpdateNoteStatisticIn, UpdateNoteStatisticOut
+from app.schema.response import ResponseModel
+from app.crud.note import fetch_all_note_list_from_db, fetch_note_from_db, update_note_statistic_from_db
 
 router = APIRouter(prefix="/note", tags=["文章管理"])
 

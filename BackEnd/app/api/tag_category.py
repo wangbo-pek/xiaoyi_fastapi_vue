@@ -6,10 +6,10 @@ from typing import List
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from BackEnd.app.deps.db import get_db
-from BackEnd.app.schema.response import ResponseModel
-from BackEnd.app.schema.tag_category import TagWithCountOut, CategoryWithCountOut
-from BackEnd.app.crud.tag_category import *
+from app.deps.db import get_db
+from app.schema.response import ResponseModel
+from app.schema.tag_category import TagWithCountOut, CategoryWithCountOut
+from app.crud.tag_category import *
 
 router = APIRouter(prefix="/tag_category", tags=["标签分类管理"])
 

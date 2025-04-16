@@ -5,8 +5,8 @@
 from fastapi import HTTPException
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session, joinedload
-from BackEnd.app.models import Tag, Diary, DiaryList
-from BackEnd.app.schema.diary import DiaryCreate, DiaryListCreate, UpdateDiaryStatisticIn
+from app.models import Tag, Diary, DiaryList
+from app.schema.diary import DiaryCreate, DiaryListCreate, UpdateDiaryStatisticIn
 
 
 def create_diary_and_list(
